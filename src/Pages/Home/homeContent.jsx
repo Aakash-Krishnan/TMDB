@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
-import { API_KEY } from "../../api";
+import { API_KEY } from "../../keys";
 
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";

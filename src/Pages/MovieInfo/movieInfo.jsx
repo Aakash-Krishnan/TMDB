@@ -5,7 +5,7 @@ import { Container } from "./style";
 
 import { CircularProgress } from "@mui/material";
 
-import { dataProcessor } from "../../utils/movieDataProcessor";
+import { dataProcessor } from "../../utils/dataProcessor";
 import { getStatusAPI } from "../../api";
 import HeaderInfo from "./HeaderInfo";
 
