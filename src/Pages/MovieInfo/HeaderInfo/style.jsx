@@ -7,6 +7,7 @@ export const HeaderContainer = styled.div`
   min-height: 600px;
   background-color: "black";
   background: "black";
+  position: relative;
 `;
 
 export const BackgroundImg = styled.div`
@@ -37,6 +38,7 @@ export const BackgroundImg = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
+
     background: rgba(0, 0, 0, 0.4);
     z-index: 2;
   }

@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { Container } from "./style";
 
-import { CircularProgress } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 
 import { dataProcessor } from "../../utils/dataProcessor";
 import { getStatusAPI } from "../../api";
 import HeaderInfo from "./HeaderInfo";
+import BodyInfo from "./BodyInfo";
 
 const MovieInfo = () => {
   const { state } = useLocation();
@@ -20,16 +21,30 @@ const MovieInfo = () => {
     getStatusAPI(res, type, data.id, setheaderData);
   }, []);
 
+  // console.log(headerData);
   return (
     <Container>
       {Object.keys(headerData).length === 0 ? (
-        <CircularProgress color="secondary" />
+        <Box
+          sx={{
+            display: "flex",
+            placeItems: "center",
+            height: "600px",
+            justifyContent: "center",
+            margin: "auto",
+          }}
+        >
+          <CircularProgress />
+        </Box>
       ) : (
-        <HeaderInfo
-          headerData={headerData}
-          setheaderData={setheaderData}
-          type={type}
-        />
+        <>
+          <HeaderInfo
+            headerData={headerData}
+            setheaderData={setheaderData}
+            type={type}
+          />
+          <BodyInfo data={data} type={type} tvCrew={tvCrew} />
+        </>
       )}
     </Container>
   );

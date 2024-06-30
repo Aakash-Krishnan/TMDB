@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
@@ -64,7 +65,12 @@ const HomeContentPage = ({
 
     const pSettled = Promise.allSettled([tvCrewApi, tvRatingAPi, data]);
     pSettled.then((res) => {
-      navigate(`/movie/${id}`, {
+      let name = res[2]?.value?.data.title
+        ? res[2]?.value?.data.title
+        : res[2]?.value?.data.name;
+
+      name = name.split(" ").join("-");
+      navigate(`/movie/${id}-${name}`, {
         state: {
           tvCrew: res[0]?.value?.data,
           tvRatings: res[1]?.value?.data,

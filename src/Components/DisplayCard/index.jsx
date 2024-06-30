@@ -4,6 +4,8 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import { CardActionArea } from "@mui/material";
 
+import { IMAGES_BASE_URL } from "../../constants";
+
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
@@ -28,7 +30,7 @@ const DisplayCard = ({ item, handleClick, listenerType }) => {
             style={{ borderRadius: "16px" }}
             component="img"
             height="200"
-            image={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+            image={`${IMAGES_BASE_URL}${item.poster_path}`}
             alt="green iguana"
           />
           <Box
