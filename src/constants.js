@@ -6,8 +6,8 @@ export const TMDB_LOGO =
 export const IMAGES_BASE_URL = "https://image.tmdb.org/t/p/original/";
 
 export const apiURLS = {
-  getSearchURL: (value, pageNo = 1) =>
-    `search/movie?query=${value}&include_adult=false&language=en-US&page=${pageNo}`,
+  getSearchURL: (type, value, pageNo = 1) =>
+    `search/${type}?query=${value}&include_adult=true&language=en-US&page=${pageNo}`,
   getTvCrewURL: (id) => `/tv/${id}/aggregate_credits?language=en-US`,
   getTvRatingsURL: (id) => `/tv/${id}/content_ratings`,
   getSelectedMovieTvURL: (type, id, API_KEY) =>

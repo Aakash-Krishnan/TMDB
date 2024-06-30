@@ -31,7 +31,7 @@ export const CardWrapper = styled.div`
   }
 
   &::-webkit-scrollbar {
-    height: 12px;
+    height: 10px;
     background-color: #f5f5f5;
   }
 

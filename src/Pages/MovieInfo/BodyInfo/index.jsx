@@ -6,7 +6,7 @@ import {
   CardMedia,
   CircularProgress,
 } from "@mui/material";
-import Card from "@mui/material/Card";
+// import Card from "@mui/material/Card";
 
 import { IMAGES_BASE_URL } from "../../../constants";
 import { CardWrapper, MoviesCard } from "./style";
