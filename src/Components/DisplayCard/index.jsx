@@ -2,7 +2,6 @@
 
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 
 import CircularProgress from "@mui/material/CircularProgress";
@@ -65,14 +64,9 @@ const DisplayCard = ({ item, handleClick, listenerType }) => {
                 justifyContent: "center",
               }}
             >
-              <Typography
-                variant="caption"
-                component="div"
-                color="white"
-                fontWeight={700}
-              >
+              <p style={{ color: "white", fontSize: "14px" }}>
                 {`${Math.round(item.vote_average * 10)}%`}
-              </Typography>
+              </p>
             </Box>
           </Box>
 
@@ -92,19 +86,7 @@ const DisplayCard = ({ item, handleClick, listenerType }) => {
                   flexDirection: "column",
                 }}
               >
-                <span
-                  style={
-                    {
-                      // marginBottom: "6px",
-                      // overflow: "hidden",
-                      // textOverflow: "ellipsis",
-                      // width: "200px",
-                      // whiteSpace: "nowrap",
-                    }
-                  }
-                >
-                  {item.original_title ?? item.original_name}
-                </span>
+                <span>{item.original_title ?? item.original_name}</span>
                 <span style={{ color: "grey", marginTop: "5px" }}>
                   {item.release_date ?? item.first_air_date}
                 </span>

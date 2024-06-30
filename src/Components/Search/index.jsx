@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 
 import "./style.css";
 
+import { IMAGES_BASE_URL, apiURLS } from "../../constants";
+
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -17,9 +19,8 @@ const SearchBox = ({ getSearchData, images }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const debounceHandler = useDebounce((value) => {
-    APIInstance.get(
-      `search/movie?query=${value}&include_adult=false&language=en-US&page=1`
-    )
+    const searchURL = apiURLS.getSearchURL(value);
+    APIInstance.get(searchURL)
       .then((res) => getSearchData(res.data.results))
       .catch((err) => console.log(err));
   });
@@ -40,7 +41,7 @@ const SearchBox = ({ getSearchData, images }) => {
 
   return (
     <BackgroundImg
-      imgurl={`https://image.tmdb.org/t/p/original/${images[currentImageIndex]}`}
+      imgurl={`${IMAGES_BASE_URL}${images[currentImageIndex]}`}
       className="search-container"
     >
       <Content

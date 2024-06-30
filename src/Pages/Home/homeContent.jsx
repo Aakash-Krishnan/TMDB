@@ -16,6 +16,7 @@ import {
   CardWrapper,
 } from "./style";
 import DisplayCard from "../../Components/DisplayCard";
+import { apiURLS } from "../../constants";
 
 const HomeContentPage = ({
   list,
@@ -55,12 +56,10 @@ const HomeContentPage = ({
 
   const handleClick = (e, id, type) => {
     e.preventDefault();
-    const tvCrewApi = APIInstance.get(
-      `/tv/${id}/aggregate_credits?language=en-US`
-    );
-    const tvRatingAPi = APIInstance.get(`/tv/${id}/content_ratings`);
+    const tvCrewApi = APIInstance.get(apiURLS.getTvCrewURL(id));
+    const tvRatingAPi = APIInstance.get(apiURLS.getTvRatingsURL(id));
     const data = APIInstance.get(
-      `${type}/${id}?api_key=${API_KEY}/content_ratings&append_to_response=credits,videos,images,release_dates`
+      apiURLS.getSelectedMovieTvURL(type, id, API_KEY)
     );
 
     const pSettled = Promise.allSettled([tvCrewApi, tvRatingAPi, data]);

@@ -1,11 +1,9 @@
 export const dataProcessor = (data, type, ratings, tvCrew) => {
-  //   console.log(data);
   const id = data.id;
   const backdrop = data.backdrop_path;
   const poster = data.poster_path;
 
   let releaseYear, releaseDate, title, certificate, finalCertificate;
-
   if (type === "movie") {
     title = data.title;
     releaseYear = data.release_date.split("-")[0];
@@ -13,16 +11,12 @@ export const dataProcessor = (data, type, ratings, tvCrew) => {
   } else {
     title = data.original_name;
     releaseYear = data.first_air_date.split("-")[0];
-    // releaseDate = data.first_air_date.split("-").reverse().join("/");
   }
 
   if (!ratings) {
-    // console.log("RATING", ratings);
     certificate = data.release_dates.results.filter(
       (item) => item.iso_3166_1 === String(data.origin_country[0])
     );
-
-    // console.log("certificate: ", certificate);
 
     certificate = certificate[0];
     const country = certificate.iso_3166_1;
@@ -30,16 +24,17 @@ export const dataProcessor = (data, type, ratings, tvCrew) => {
       (item) => item.certification !== ""
     )[0]?.certification;
 
-    // console.log("cer", cer);
-
     finalCertificate = {
       country,
       certificate: cer,
     };
-  } else {
+  } else if (ratings.results.length !== 0) {
     certificate = ratings.results.filter(
       (item) => item.iso_3166_1 === String(data.origin_country[0])
     );
+    if (certificate.length === 0) {
+      certificate = ratings.results;
+    }
     certificate = certificate[0];
     const country = certificate.iso_3166_1;
     finalCertificate = {
@@ -103,7 +98,7 @@ export const dataProcessor = (data, type, ratings, tvCrew) => {
     watchlist,
   };
 
-  //   console.log("OBJ", obj);
+  // console.log("OBJ", obj);
 
   return obj;
 };
