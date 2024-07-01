@@ -20,13 +20,16 @@ const SearchArea = () => {
 
   const [contentType, setContentType] = useState(type);
 
+  const [error, setError] = useState(false);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const [view, setView] = useState(type);
   const [searchData, setSearchData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handleChange = (event, nextView) => {
     setContentType(nextView);
+    setLoading(true);
     setPage(1);
     setSearchData([]);
     setView(nextView);
@@ -50,18 +53,21 @@ const SearchArea = () => {
   useEffect(() => {
     APIInstance.get(apiURLS.getSearchURL(view, query, page))
       .then((res) => {
+        if (res.data.results.length === 0) throw new Error("No results found");
         setTotalResults(res.data.total_results);
         setSearchData((prev) => [...prev, ...res.data.results]);
+        setLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err.message);
+        setError(true);
+      });
   }, [view, page]);
 
   // console.log(searchData);
 
   return (
     <div>
-      <h1>SEARCH</h1>
-
       <div style={{ display: "flex", gap: "20px" }}>
         <div style={{ flex: "0 0 25%" }}>
           <div
@@ -92,7 +98,9 @@ const SearchArea = () => {
           </div>
         </div>
         <div style={{ flex: "1" }}>
-          {Object.keys(searchData).length === 0 ? (
+          {error ? (
+            <h1>NO match</h1>
+          ) : Object.keys(searchData).length === 0 ? (
             <Box
               sx={{
                 display: "flex",
@@ -105,20 +113,36 @@ const SearchArea = () => {
               <CircularProgress />
             </Box>
           ) : (
-            <CardWrapper>
-              {searchData.map((item) => {
-                return (
-                  <div key={item.id}>
-                    <DisplayCard
-                      item={item}
-                      handleClick={handleNavigation}
-                      listenerType={contentType}
-                    />
-                  </div>
-                );
-              })}
-            </CardWrapper>
+            <>
+              <CardWrapper>
+                {searchData.map((item) => {
+                  return (
+                    <div key={item.id}>
+                      <DisplayCard
+                        item={item}
+                        handleClick={handleNavigation}
+                        listenerType={contentType}
+                      />
+                    </div>
+                  );
+                })}
+              </CardWrapper>
+
+              {loading && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    placeItems: "center",
+                    height: "350px",
+                    margin: "auto",
+                  }}
+                >
+                  <CircularProgress />
+                </Box>
+              )}
+            </>
           )}
+
           <div ref={lastElementRef}></div>
         </div>
       </div>

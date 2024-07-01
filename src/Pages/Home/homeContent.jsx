@@ -57,7 +57,7 @@ const HomeContentPage = ({
         <GenreContainer>
           <h2>{list}</h2>
           <ToggleButtonGroup
-            color="primary"
+            color="secondary"
             value={specials}
             exclusive
             onChange={handleChange}

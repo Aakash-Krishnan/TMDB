@@ -57,7 +57,7 @@ export const Content = styled.div`
   color: #fff;
   padding: 20px;
   height: 100%;
-
+  place-items: center;
   width: 90%;
 
   display: flex;

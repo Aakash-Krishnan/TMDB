@@ -12,7 +12,7 @@ import BodyInfo from "./BodyInfo";
 
 const MovieInfo = () => {
   const { state } = useLocation();
-  const { tvCrew, tvRatings, data, type } = state;
+  const { tvCrew, tvRatings, data, type, watchProviders } = state;
 
   const [headerData, setheaderData] = useState({});
 
@@ -42,6 +42,7 @@ const MovieInfo = () => {
             headerData={headerData}
             setheaderData={setheaderData}
             type={type}
+            watchProviders={watchProviders}
           />
           <BodyInfo data={data} type={type} tvCrew={tvCrew} />
         </>

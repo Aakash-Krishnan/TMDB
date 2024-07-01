@@ -6,36 +6,54 @@ import {
   Content,
   FavIcon,
   HeaderContainer,
-  ImgCard,
   WatchlistIcon,
 } from "./style";
 
 import { IMAGES_BASE_URL } from "../../../constants";
 
-import CardMedia from "@mui/material/CardMedia";
-import { Box, CardActionArea, CircularProgress } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  ImageListItem,
+  ImageListItemBar,
+} from "@mui/material";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 import { ArrowToolTip } from "../../../Components/Tooltip";
 import { setStatusAPI } from "../../../api";
 
-const HeaderInfo = ({ headerData, type, setheaderData }) => {
+const HeaderInfo = ({ headerData, type, setheaderData, watchProviders }) => {
+  // console.log(watchProviders);
+  const watchProvider =
+    Object.keys(watchProviders).length > 0
+      ? watchProviders.IN
+        ? watchProviders.IN.flatrate[0]
+        : watchProviders[Object.keys(watchProviders)[0]].buy[0]
+      : null;
+  // console.log("WATCH PROVIDER", watchProvider);
   return (
     <HeaderContainer>
       <BackgroundImg imgurl={`${IMAGES_BASE_URL}${headerData.backdrop}`}>
         <Content>
           <div>
-            <ImgCard>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  height="450"
-                  image={`${IMAGES_BASE_URL}${headerData.poster}`}
-                  alt="green iguana"
+            <ImageListItem style={{ width: "300px" }}>
+              <img src={`${IMAGES_BASE_URL}${headerData.poster}`} />
+              {watchProvider && (
+                <ImageListItemBar
+                  title={watchProvider.provider_name}
+                  actionIcon={
+                    <img
+                      style={{ marginRight: "10px", marginTop: "10px" }}
+                      width="40px"
+                      height="40px"
+                      src={`${IMAGES_BASE_URL}${watchProvider.logo_path}`}
+                      alt="PROVIDER"
+                    />
+                  }
                 />
-              </CardActionArea>
-            </ImgCard>
+              )}
+            </ImageListItem>
           </div>
 
           <div

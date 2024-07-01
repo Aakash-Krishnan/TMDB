@@ -50,19 +50,31 @@ export const useContentInfo = () => {
     const data = APIInstance.get(
       apiURLS.getSelectedMovieTvURL(type, id, API_KEY)
     );
+    const watchProviders = APIInstance.get(
+      apiURLS.getSelectedMovieTvWatchProvidersURL(type, id)
+    );
 
-    const pSettled = Promise.allSettled([tvCrewApi, tvRatingAPi, data]);
+    const pSettled = Promise.allSettled([
+      tvCrewApi,
+      tvRatingAPi,
+      data,
+      watchProviders,
+    ]);
     pSettled.then((res) => {
       let name = res[2]?.value?.data.title
         ? res[2]?.value?.data.title
         : res[2]?.value?.data.name;
 
       name = name.split(" ").join("-");
+
+      // console.log(res);
+
       navigate(`/info/${type}/${id}-${name}`, {
         state: {
           tvCrew: res[0]?.value?.data,
           tvRatings: res[1]?.value?.data,
           data: res[2]?.value?.data,
+          watchProviders: res[3]?.value?.data?.results,
           type,
         },
       });

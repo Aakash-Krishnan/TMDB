@@ -7,12 +7,13 @@ export const IMAGES_BASE_URL = "https://image.tmdb.org/t/p/original/";
 
 export const apiURLS = {
   getSearchURL: (type, value, pageNo = 1) =>
-    `search/${type}?query=${value}&include_adult=true&language=en-US&page=${pageNo}`,
-  // getSearchPersonURL: () => {}
+    `search/${type}?query=${value}&include_adult=false&language=en-US&page=${pageNo}`,
   getTvCrewURL: (id) => `/tv/${id}/aggregate_credits?language=en-US`,
   getTvRatingsURL: (id) => `/tv/${id}/content_ratings`,
   getSelectedMovieTvURL: (type, id, API_KEY) =>
     `${type}/${id}?api_key=${API_KEY}/content_ratings&append_to_response=credits,videos,images,release_dates`,
+  getSelectedMovieTvWatchProvidersURL: (type, id) =>
+    `${type}/${id}/watch/providers`,
   getTrendingURL: (path, endPoint) => `/${path}/all/${endPoint}?language=en-US`,
   getTopMoviesURL: (path, pageNo = 1) =>
     `movie/${path}?language=en-US&page=${pageNo}&append_to_response=media_type`,
