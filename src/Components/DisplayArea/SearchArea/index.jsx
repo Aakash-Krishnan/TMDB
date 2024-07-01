@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import { apiURLS } from "../../../constants";
-import { APIInstance } from "../../../api";
+import { APIInstance, useContentInfo } from "../../../api";
 import DisplayCard from "../../DisplayCard";
 
-import { API_KEY } from "../../../keys";
 import {
   Box,
   CircularProgress,
@@ -14,64 +14,60 @@ import {
 import { CardWrapper } from "./style";
 
 const SearchArea = () => {
-  const [page, setPage] = useState(0);
-  const [view, setView] = useState("list");
-  const [searchData, setSearchData] = useState({});
-  const navigate = useNavigate();
   const { type, query } = useParams();
+  const { handleNavigation } = useContentInfo();
+  const lastElementRef = useRef(null);
+
+  const [contentType, setContentType] = useState(type);
+
+  const [page, setPage] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
+  const [view, setView] = useState(type);
+  const [searchData, setSearchData] = useState([]);
 
   const handleChange = (event, nextView) => {
+    setContentType(nextView);
+    setPage(1);
+    setSearchData([]);
     setView(nextView);
   };
 
   useEffect(() => {
-    APIInstance.get(apiURLS.getSearchURL(type, query))
-      .then((res) => {
-        setPage(res.data.page);
-        setSearchData(res.data.results);
-      })
-      .catch((err) => console.log(err));
+    const observer = new IntersectionObserver((entries) => {
+      const el = entries[0];
+      if (el && el.isIntersecting) {
+        setPage((prev) => prev + 1);
+      }
+    });
+
+    if (lastElementRef.current) observer.observe(lastElementRef.current);
+
+    return () => {
+      if (lastElementRef.current) observer.disconnect(lastElementRef.current);
+    };
   }, []);
 
-  const handleClick = (e, id, type) => {
-    e.preventDefault();
-    const tvCrewApi = APIInstance.get(apiURLS.getTvCrewURL(id));
-    const tvRatingAPi = APIInstance.get(apiURLS.getTvRatingsURL(id));
-    const data = APIInstance.get(
-      apiURLS.getSelectedMovieTvURL(type, id, API_KEY)
-    );
+  useEffect(() => {
+    APIInstance.get(apiURLS.getSearchURL(view, query, page))
+      .then((res) => {
+        setTotalResults(res.data.total_results);
+        setSearchData((prev) => [...prev, ...res.data.results]);
+      })
+      .catch((err) => console.log(err));
+  }, [view, page]);
 
-    const pSettled = Promise.allSettled([tvCrewApi, tvRatingAPi, data]);
-    pSettled.then((res) => {
-      let name = res[2]?.value?.data.title
-        ? res[2]?.value?.data.title
-        : res[2]?.value?.data.name;
-
-      name = name.split(" ").join("-");
-      navigate(`/movie/${id}-${name}`, {
-        state: {
-          tvCrew: res[0]?.value?.data,
-          tvRatings: res[1]?.value?.data,
-          data: res[2]?.value?.data,
-          type,
-        },
-      });
-    });
-  };
-
-  console.log(searchData);
+  // console.log(searchData);
 
   return (
     <div>
       <h1>SEARCH</h1>
 
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", gap: "20px" }}>
         <div style={{ flex: "0 0 25%" }}>
           <div
             style={{
               width: "100%",
               placeItems: "center",
-              border: "1px solid red",
               position: "sticky",
               top: "90px",
             }}
@@ -81,15 +77,16 @@ const SearchArea = () => {
               value={view}
               exclusive
               onChange={handleChange}
+              style={{ width: "100%" }}
             >
-              <ToggleButton value="list" aria-label="list">
-                <p>Movies</p>
+              <ToggleButton value="movie" aria-label="movie">
+                <p>Movies {view === "movie" && totalResults}</p>
               </ToggleButton>
-              <ToggleButton value="module" aria-label="module">
-                <p>Tv Shows</p>
+              <ToggleButton value="tv" aria-label="tv">
+                <p>Tv Shows {view === "tv" && totalResults}</p>
               </ToggleButton>
-              <ToggleButton value="quilt" aria-label="quilt">
-                <p>People</p>
+              <ToggleButton value="person" aria-label="person">
+                <p>People {view === "person" && totalResults}</p>
               </ToggleButton>
             </ToggleButtonGroup>
           </div>
@@ -114,14 +111,15 @@ const SearchArea = () => {
                   <div key={item.id}>
                     <DisplayCard
                       item={item}
-                      handleClick={handleClick}
-                      listenerType={type}
+                      handleClick={handleNavigation}
+                      listenerType={contentType}
                     />
                   </div>
                 );
               })}
             </CardWrapper>
           )}
+          <div ref={lastElementRef}></div>
         </div>
       </div>
     </div>

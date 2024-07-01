@@ -1,15 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
-import { API_KEY } from "../../keys";
 
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { APIInstance } from "../../api";
+import { APIInstance, useContentInfo } from "../../api";
 import {
   WholeDiv,
   DisplayCardContainer,
@@ -17,7 +15,6 @@ import {
   CardWrapper,
 } from "./style";
 import DisplayCard from "../../Components/DisplayCard";
-import { apiURLS } from "../../constants";
 
 const HomeContentPage = ({
   list,
@@ -29,8 +26,7 @@ const HomeContentPage = ({
   const [specials, setSpecials] = useState(
     queryPath[0].endPoint ? queryPath[0].endPoint : queryPath[0].path
   );
-
-  const navigate = useNavigate();
+  const { handleNavigation } = useContentInfo();
 
   const [loading, setLoading] = useState(true);
   const [movieData, setMovieData] = useState([]);
@@ -54,32 +50,6 @@ const HomeContentPage = ({
       setLoading(false);
     });
   }, [specials, getUrl, queryPath]);
-
-  const handleClick = (e, id, type) => {
-    e.preventDefault();
-    const tvCrewApi = APIInstance.get(apiURLS.getTvCrewURL(id));
-    const tvRatingAPi = APIInstance.get(apiURLS.getTvRatingsURL(id));
-    const data = APIInstance.get(
-      apiURLS.getSelectedMovieTvURL(type, id, API_KEY)
-    );
-
-    const pSettled = Promise.allSettled([tvCrewApi, tvRatingAPi, data]);
-    pSettled.then((res) => {
-      let name = res[2]?.value?.data.title
-        ? res[2]?.value?.data.title
-        : res[2]?.value?.data.name;
-
-      name = name.split(" ").join("-");
-      navigate(`/movie/${id}-${name}`, {
-        state: {
-          tvCrew: res[0]?.value?.data,
-          tvRatings: res[1]?.value?.data,
-          data: res[2]?.value?.data,
-          type,
-        },
-      });
-    });
-  };
 
   return (
     <WholeDiv>
@@ -126,7 +96,7 @@ const HomeContentPage = ({
                   <div key={item.id}>
                     <DisplayCard
                       item={item}
-                      handleClick={handleClick}
+                      handleClick={handleNavigation}
                       listenerType={listenerType}
                     />
                   </div>
