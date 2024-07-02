@@ -17,20 +17,50 @@ import {
   ImageListItem,
   ImageListItemBar,
 } from "@mui/material";
+import Modal from "@mui/material/Modal";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 import { ArrowToolTip } from "../../../Components/Tooltip";
 import { setStatusAPI } from "../../../api";
+import { useState } from "react";
 
-const HeaderInfo = ({ headerData, type, setheaderData, watchProviders }) => {
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  padding: "0px",
+  border: "none",
+  outline: "none",
+  p: 4,
+};
+
+const HeaderInfo = ({
+  headerData,
+  type,
+  setheaderData,
+  watchProviders,
+  data,
+}) => {
   // console.log(watchProviders);
+  const [modal, setModal] = useState(false);
+
   const watchProvider =
     Object.keys(watchProviders).length > 0
       ? watchProviders.IN
         ? watchProviders.IN.flatrate[0]
+        : Object.keys(watchProviders).filter(
+            (key) => watchProviders[key]?.flatrate?.length > 0
+          )[0] != null
+        ? watchProviders[
+            Object.keys(watchProviders).filter(
+              (key) => watchProviders[key]?.flatrate?.length > 0
+            )[0]
+          ].flatrate[0]
         : watchProviders[Object.keys(watchProviders)[0]].buy[0]
       : null;
+
   // console.log("WATCH PROVIDER", watchProvider);
   return (
     <HeaderContainer>
@@ -41,6 +71,7 @@ const HeaderInfo = ({ headerData, type, setheaderData, watchProviders }) => {
               <img src={`${IMAGES_BASE_URL}${headerData.poster}`} />
               {watchProvider && (
                 <ImageListItemBar
+                  style={{ cursor: "pointer" }}
                   title={watchProvider.provider_name}
                   actionIcon={
                     <img
@@ -269,6 +300,9 @@ const HeaderInfo = ({ headerData, type, setheaderData, watchProviders }) => {
                   alignItems: "center",
                   cursor: "pointer",
                 }}
+                onClick={() => {
+                  setModal(true);
+                }}
               >
                 <PlayArrowIcon style={{ fontSize: "30px" }} />
                 <p>Play Trailer</p>
@@ -302,6 +336,24 @@ const HeaderInfo = ({ headerData, type, setheaderData, watchProviders }) => {
           </div>
         </Content>
       </BackgroundImg>
+
+      {modal && (
+        <Modal
+          open={modal}
+          onClose={() => setModal(false)}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <iframe
+              width="850px"
+              height="450px"
+              src={`https://www.youtube.com/embed/${data.videos.results[0]?.key}`}
+              allowFullScreen
+            ></iframe>
+          </Box>
+        </Modal>
+      )}
     </HeaderContainer>
   );
 };

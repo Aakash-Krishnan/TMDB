@@ -43,6 +43,7 @@ const MovieInfo = () => {
             setheaderData={setheaderData}
             type={type}
             watchProviders={watchProviders}
+            data={data}
           />
           <BodyInfo data={data} type={type} tvCrew={tvCrew} />
         </>

@@ -7,7 +7,6 @@ import {
   CardMedia,
   CircularProgress,
   Divider,
-  IconButton,
 } from "@mui/material";
 
 import { IMAGES_BASE_URL } from "../../../constants";

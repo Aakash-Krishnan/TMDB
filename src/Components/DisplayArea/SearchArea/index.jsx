@@ -28,11 +28,14 @@ const SearchArea = () => {
   const [loading, setLoading] = useState(true);
 
   const handleChange = (event, nextView) => {
-    setContentType(nextView);
-    setLoading(true);
-    setPage(1);
-    setSearchData([]);
-    setView(nextView);
+    if (nextView) {
+      setContentType(nextView);
+      setLoading(true);
+      setError(false);
+      setPage(1);
+      setSearchData([]);
+      setView(nextView);
+    }
   };
 
   useEffect(() => {
@@ -50,26 +53,37 @@ const SearchArea = () => {
     };
   }, []);
 
+  // NOTE: Need help
   useEffect(() => {
-    APIInstance.get(apiURLS.getSearchURL(view, query, page))
-      .then((res) => {
-        if (res.data.results.length === 0) throw new Error("No results found");
-        setTotalResults(res.data.total_results);
-        setSearchData((prev) => [...prev, ...res.data.results]);
+    const fetchData = async () => {
+      try {
+        const data = await APIInstance.get(
+          apiURLS.getSearchURL(view, query, page)
+        );
+        const res = await data.data;
+
+        setTotalResults(res.total_results);
+        setSearchData((prev) => [...prev, ...res.results]);
         setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err.message);
+
+        if (res.results.length === 0 && searchData.length === 0) {
+          throw new Error("No results found");
+        }
+      } catch (err) {
+        console.log("SEARCH ERROR");
+        setTotalResults(0);
         setError(true);
-      });
+      }
+    };
+    fetchData();
   }, [view, page]);
 
   // console.log(searchData);
 
   return (
     <div>
-      <div style={{ display: "flex", gap: "20px" }}>
-        <div style={{ flex: "0 0 25%" }}>
+      <div style={{ display: "flex", gap: "50px", marginTop: "40px" }}>
+        <div style={{ flex: "0 0 25%", marginLeft: "50px" }}>
           <div
             style={{
               width: "100%",
@@ -85,6 +99,20 @@ const SearchArea = () => {
               onChange={handleChange}
               style={{ width: "100%" }}
             >
+              <button
+                style={{
+                  padding: "20px",
+                  cursor: "auto",
+                  backgroundColor: "#01b4e4",
+                  border: "none",
+                  outline: "none",
+                  color: "white",
+                  fontSize: "20px",
+                  borderRadius: "10px 10px 0px 0px",
+                }}
+              >
+                Search Results
+              </button>
               <ToggleButton value="movie" aria-label="movie">
                 <p>Movies {view === "movie" && totalResults}</p>
               </ToggleButton>
@@ -93,6 +121,9 @@ const SearchArea = () => {
               </ToggleButton>
               <ToggleButton value="person" aria-label="person">
                 <p>People {view === "person" && totalResults}</p>
+              </ToggleButton>
+              <ToggleButton value="collection" aria-label="collection">
+                <p>Collections {view === "collection" && totalResults}</p>
               </ToggleButton>
             </ToggleButtonGroup>
           </div>

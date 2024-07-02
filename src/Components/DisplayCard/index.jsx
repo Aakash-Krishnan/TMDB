@@ -33,44 +33,48 @@ const DisplayCard = ({ item, handleClick, listenerType }) => {
             image={`${IMAGES_BASE_URL}${item.poster_path}`}
             alt="green iguana"
           />
-          <Box
-            sx={{
-              position: "absolute",
-              display: "inline-flex",
-              top: "180px",
-              left: "6px",
-              color: "black",
-            }}
-          >
-            <CircularProgress
-              variant="determinate"
-              value={Math.round(item.vote_average * 10)}
-              thickness={5}
-              color={
-                Math.round(item.vote_average * 10) > 70
-                  ? "success"
-                  : Math.round(item.vote_average * 10) > 40
-                  ? "warning"
-                  : "inherit"
-              }
-            />
-            <Box
-              sx={{
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0,
-                position: "absolute",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <p style={{ color: "white", fontSize: "14px" }}>
-                {`${Math.round(item.vote_average * 10)}%`}
-              </p>
-            </Box>
-          </Box>
+          {item.vote_average && (
+            <>
+              <Box
+                sx={{
+                  position: "absolute",
+                  display: "inline-flex",
+                  top: "180px",
+                  left: "6px",
+                  color: "black",
+                }}
+              >
+                <CircularProgress
+                  variant="determinate"
+                  value={Math.round(item.vote_average * 10)}
+                  thickness={5}
+                  color={
+                    Math.round(item.vote_average * 10) > 70
+                      ? "success"
+                      : Math.round(item.vote_average * 10) > 40
+                      ? "warning"
+                      : "inherit"
+                  }
+                />
+                <Box
+                  sx={{
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    position: "absolute",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <p style={{ color: "white", fontSize: "14px" }}>
+                    {`${Math.round(item.vote_average * 10)}%`}
+                  </p>
+                </Box>
+              </Box>
+            </>
+          )}
 
           <CardContent stye={{ paddingBottom: "0px" }}>
             <div
@@ -88,7 +92,9 @@ const DisplayCard = ({ item, handleClick, listenerType }) => {
                   flexDirection: "column",
                 }}
               >
-                <span>{item.original_title ?? item.original_name}</span>
+                <span>
+                  {item.original_title ?? item.name ?? item.original_name}
+                </span>
                 <span style={{ color: "grey", marginTop: "5px" }}>
                   {item.release_date ?? item.first_air_date}
                 </span>
