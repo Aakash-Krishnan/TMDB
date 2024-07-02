@@ -7,12 +7,23 @@ import {
   CardMedia,
   CircularProgress,
   Divider,
+  ToggleButton,
+  ToggleButtonGroup,
 } from "@mui/material";
 
+import moment from "moment";
 import { IMAGES_BASE_URL } from "../../../constants";
 import { CardWrapper, MoviesCard } from "./style";
+import { useState } from "react";
 
 const BodyInfo = ({ tvCrew, type, data }) => {
+  const [view, setView] = useState("videos");
+  const [images, setImages] = useState([]);
+
+  const handleChange = (event, newView) => {
+    
+    setView(newView);
+  };
   console.log(data);
   return (
     <div style={{ width: "100%", marginTop: "20px", padding: "10px 50px" }}>
@@ -138,6 +149,129 @@ const BodyInfo = ({ tvCrew, type, data }) => {
             </Card>
           </div>
         )}
+
+        <div style={{ margin: "40px 0px" }}>
+          <Divider
+            style={{ height: "1.5px", backgroundColor: "grey" }}
+          ></Divider>
+        </div>
+
+        <div className="Reviews">
+          <h2>Social</h2> <span>Reviews</span>
+          <div
+            style={{
+              marginTop: "20px",
+              minHeight: "200px",
+              maxHeight: "400px",
+              // border: "1px solid red",
+              overflowY: "auto",
+              marginBottom: "50px",
+            }}
+          >
+            {data.reviews.results.map((people) => {
+              return (
+                <Card key={people.id} style={{ margin: "30px 30px 30px 0px" }}>
+                  <CardActionArea>
+                    <CardContent>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "10px",
+                          alignItems: "center",
+                        }}
+                      >
+                        {people.author_details.avatar_path ? (
+                          <img
+                            width="60px"
+                            height="60px"
+                            style={{ borderRadius: "50%" }}
+                            src={`${IMAGES_BASE_URL}${people.author_details.avatar_path}`}
+                            alt="profile-pik"
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              fontSize: "28px",
+                              backgroundColor: "indigo",
+                              color: "white",
+                              width: "50px",
+                              height: "50px",
+                              display: "flex",
+                              borderRadius: "50%",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            {people.author[0]}
+                          </div>
+                        )}
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <div>
+                            <p style={{ fontSize: "24px", fontWeight: "600" }}>
+                              A review by {people.author_details.username}
+                            </p>
+                            <p
+                              style={{
+                                fontSize: "18px",
+                                fontWeight: "400",
+                              }}
+                            >
+                              written by {people.author} on{" "}
+                              {moment(people.created_at).format("MMMM DD yyyy")}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          marginTop: "30px",
+                          fontSize: "18px",
+                        }}
+                      >
+                        <p>{people.content}</p>
+                      </div>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              );
+            })}
+            <p>Read all reviews</p>
+          </div>
+        </div>
+
+        <div style={{ margin: "40px 0px" }}>
+          <Divider
+            style={{ height: "1.5px", backgroundColor: "grey" }}
+          ></Divider>
+        </div>
+
+        <div>
+          <div>
+            <h1>Media</h1>
+            <ToggleButtonGroup
+              color="primary"
+              value={view}
+              exclusive
+              onChange={handleChange}
+              aria-label="Platform"
+            >
+              <ToggleButton value="web">Web</ToggleButton>
+              <ToggleButton value="android">Android</ToggleButton>
+              <ToggleButton value="ios">iOS</ToggleButton>
+            </ToggleButtonGroup>
+          </div>
+        </div>
+
+        <div style={{ margin: "40px 0px" }}>
+          <Divider
+            style={{ height: "1.5px", backgroundColor: "grey" }}
+          ></Divider>
+        </div>
+
+        <div>Recommendations</div>
       </div>
     </div>
   );
