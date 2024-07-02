@@ -46,20 +46,20 @@ const HeaderInfo = ({
   // console.log(watchProviders);
   const [modal, setModal] = useState(false);
 
-  const watchProvider =
-    Object.keys(watchProviders).length > 0
-      ? watchProviders.IN
-        ? watchProviders.IN.flatrate[0]
-        : Object.keys(watchProviders).filter(
-            (key) => watchProviders[key]?.flatrate?.length > 0
-          )[0] != null
-        ? watchProviders[
-            Object.keys(watchProviders).filter(
-              (key) => watchProviders[key]?.flatrate?.length > 0
-            )[0]
-          ].flatrate[0]
-        : watchProviders[Object.keys(watchProviders)[0]].buy[0]
-      : null;
+  const watchProvider = null;
+  // Object.keys(watchProviders).length > 0
+  //   ? watchProviders.IN
+  //     ? watchProviders.IN.flatrate[0]
+  //     : Object.keys(watchProviders).filter(
+  //         (key) => watchProviders[key]?.flatrate?.length > 0
+  //       )[0] != null
+  //     ? watchProviders[
+  //         Object.keys(watchProviders).filter(
+  //           (key) => watchProviders[key]?.flatrate?.length > 0
+  //         )[0]
+  //       ].flatrate[0]
+  //     : watchProviders[Object.keys(watchProviders)[0]].buy[0]
+  //   : null;
 
   // console.log("WATCH PROVIDER", watchProvider);
   return (

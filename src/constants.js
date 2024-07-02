@@ -16,6 +16,7 @@ export const apiURLS = {
     `${type}/${id}?api_key=${API_KEY}/content_ratings&append_to_response=credits,videos,images,release_dates,reviews`,
   getSelectedMovieTvWatchProvidersURL: (type, id) =>
     `${type}/${id}/watch/providers`,
+  getRecommendations: (type, id, page=1) => `/${type}/${id}/recommendations?language=en-US&page=${page}`,
   getTrendingURL: (path, endPoint) => `/${path}/all/${endPoint}?language=en-US`,
   getTopMoviesURL: (path, pageNo = 1) =>
     `movie/${path}?language=en-US&page=${pageNo}&append_to_response=media_type`,

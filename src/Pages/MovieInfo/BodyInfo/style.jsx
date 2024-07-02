@@ -1,11 +1,21 @@
 import styled from "styled-components";
 import { CardActionArea } from "@mui/material";
 import Card from "@mui/material/Card";
+import { Divider } from "@mui/material";
 
 export const MoviesCard = styled(Card)`
   min-width: 160px;
   height: auto;
   margin: 14px 0px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+`;
+
+export const ImagesCard = styled(Card)`
+  min-width: 360px;
+  margin: 10px 0px 0px 10px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 `;
 
 export const WholeDiv = styled.div`

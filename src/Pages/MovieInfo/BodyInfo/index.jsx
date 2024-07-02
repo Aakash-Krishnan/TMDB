@@ -12,19 +12,53 @@ import {
 } from "@mui/material";
 
 import moment from "moment";
-import { IMAGES_BASE_URL } from "../../../constants";
-import { CardWrapper, MoviesCard } from "./style";
-import { useState } from "react";
+import { IMAGES_BASE_URL, apiURLS } from "../../../constants";
+import { CardWrapper, ImagesCard, MoviesCard } from "./style";
+import { useEffect, useState } from "react";
+
+import { APIInstance, useContentInfo } from "../../../api/index";
+import DisplayCard from "../../../Components/DisplayCard";
 
 const BodyInfo = ({ tvCrew, type, data }) => {
+  const { handleNavigation } = useContentInfo();
+
   const [view, setView] = useState("videos");
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState({});
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const obj = {
+      videos: data?.videos?.results,
+      backdrops: data?.images?.backdrops,
+      posters: data?.images?.posters,
+      logos: data?.images?.logos,
+    };
+    setImages(obj);
+    setLoading(true);
+    const fetchRecommendations = async () => {
+      try {
+        const res = await APIInstance.get(
+          apiURLS.getRecommendations(type, data.id)
+        );
+        setRecommendations(res.data.results);
+        setLoading(false);
+      } catch (err) {
+        console.log("ERROR ON RECOMMENDATIONS", err);
+      }
+    };
+
+    fetchRecommendations();
+  }, []);
+
+  console.log(images);
 
   const handleChange = (event, newView) => {
-    
-    setView(newView);
+    if (newView) {
+      setView(newView);
+    }
   };
-  console.log(data);
+  // console.log(data);
   return (
     <div style={{ width: "100%", marginTop: "20px", padding: "10px 50px" }}>
       <div style={{ width: "75%" }}>
@@ -170,7 +204,14 @@ const BodyInfo = ({ tvCrew, type, data }) => {
           >
             {data.reviews.results.map((people) => {
               return (
-                <Card key={people.id} style={{ margin: "30px 30px 30px 0px" }}>
+                <Card
+                  key={people.id}
+                  style={{
+                    margin: "10px 30px 20px 10px",
+                    boxShadow:
+                      " rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px",
+                  }}
+                >
                   <CardActionArea>
                     <CardContent>
                       <div
@@ -238,8 +279,8 @@ const BodyInfo = ({ tvCrew, type, data }) => {
                 </Card>
               );
             })}
-            <p>Read all reviews</p>
           </div>
+          <p>Read all reviews</p>
         </div>
 
         <div style={{ margin: "40px 0px" }}>
@@ -249,7 +290,7 @@ const BodyInfo = ({ tvCrew, type, data }) => {
         </div>
 
         <div>
-          <div>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
             <h1>Media</h1>
             <ToggleButtonGroup
               color="primary"
@@ -258,11 +299,45 @@ const BodyInfo = ({ tvCrew, type, data }) => {
               onChange={handleChange}
               aria-label="Platform"
             >
-              <ToggleButton value="web">Web</ToggleButton>
-              <ToggleButton value="android">Android</ToggleButton>
-              <ToggleButton value="ios">iOS</ToggleButton>
+              <ToggleButton value="videos">Videos</ToggleButton>
+              <ToggleButton value="backdrops">Backdrops</ToggleButton>
+              <ToggleButton value="posters">posters</ToggleButton>
+              <ToggleButton value="logos">Logos</ToggleButton>
             </ToggleButtonGroup>
           </div>
+
+          <CardWrapper
+            style={{
+              display: "flex",
+              overflowX: "auto",
+              padding: "10px",
+            }}
+          >
+            {images[view]?.map((item) => {
+              return view === "videos" ? (
+                <div>
+                  <iframe
+                    height="240px"
+                    width="480px"
+                    allowFullScreen
+                    src={`https://www.youtube.com/embed/${item.key}`}
+                  />
+                </div>
+              ) : (
+                <ImagesCard key={item.file_path}>
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      height="240"
+                      width="480"
+                      image={`${IMAGES_BASE_URL}${item.file_path}`}
+                      alt="green iguana"
+                    />
+                  </CardActionArea>
+                </ImagesCard>
+              );
+            })}
+          </CardWrapper>
         </div>
 
         <div style={{ margin: "40px 0px" }}>
@@ -271,7 +346,38 @@ const BodyInfo = ({ tvCrew, type, data }) => {
           ></Divider>
         </div>
 
-        <div>Recommendations</div>
+        <div>
+          <h2>Recommendations</h2>
+          <div>
+            <CardWrapper>
+              {loading ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    placeItems: "center",
+                    height: "350px",
+                    margin: "auto",
+                  }}
+                >
+                  <CircularProgress />
+                </Box>
+              ) : (
+                recommendations.length > 0 &&
+                recommendations?.map((item) => {
+                  return (
+                    <div key={item.id}>
+                      <DisplayCard
+                        item={item}
+                        handleClick={handleNavigation}
+                        listenerType={type}
+                      />
+                    </div>
+                  );
+                })
+              )}
+            </CardWrapper>
+          </div>
+        </div>
       </div>
     </div>
   );
