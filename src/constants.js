@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { ACCOUNT_NO } from "./keys";
 
 export const TMDB_LOGO =
   "https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg";
@@ -12,11 +13,14 @@ export const apiURLS = {
     `search/${type}?query=${value}&include_adult=false&language=en-US&page=${pageNo}`,
   getTvCrewURL: (id) => `/tv/${id}/aggregate_credits?language=en-US`,
   getTvRatingsURL: (id) => `/tv/${id}/content_ratings`,
+  getWatchListsAndFavorites: (getFor, type, page = 1) =>
+    `account/${ACCOUNT_NO}/${getFor}/${type}?language=en-US&page=${page}&sort_by=created_at.asc`,
   getSelectedMovieTvURL: (type, id, API_KEY) =>
     `${type}/${id}?api_key=${API_KEY}/content_ratings&append_to_response=credits,videos,images,release_dates,reviews`,
   getSelectedMovieTvWatchProvidersURL: (type, id) =>
     `${type}/${id}/watch/providers`,
-  getRecommendations: (type, id, page=1) => `/${type}/${id}/recommendations?language=en-US&page=${page}`,
+  getRecommendations: (type, id, page = 1) =>
+    `/${type}/${id}/recommendations?language=en-US&page=${page}`,
   getTrendingURL: (path, endPoint) => `/${path}/all/${endPoint}?language=en-US`,
   getTopMoviesURL: (path, pageNo = 1) =>
     `movie/${path}?language=en-US&page=${pageNo}&append_to_response=media_type`,
@@ -29,9 +33,18 @@ export const navItems = [
     path: "/",
     title: "Home",
   },
+
   {
-    path: "/contact",
-    title: "Contact",
+    path: "/fav",
+    title: "Favorites",
+  },
+  {
+    path: "/watch-list",
+    title: "Watch List",
+  },
+  {
+    path: "/people",
+    title: "People",
   },
   {
     path: "/movies",
@@ -42,8 +55,8 @@ export const navItems = [
     title: "TV Shows",
   },
   {
-    path: "/people",
-    title: "People",
+    path: "/contact",
+    title: "Contact",
   },
   {
     path: "/sign-in",

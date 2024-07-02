@@ -12,14 +12,15 @@ import Box from "@mui/material/Box";
 import { MoviesCard } from "./style";
 
 const DisplayCard = ({ item, handleClick, listenerType }) => {
+  console.log("listenerType", listenerType);
   return (
     <div>
       <MoviesCard
         style={{ borderRadius: "16px" }}
         key={item.id}
-        onClick={(e) =>
+        onClick={() =>
           handleClick(
-            e,
+            item.original_title ?? item.name ?? item.original_name,
             item.id,
             item.media_type ? item.media_type : listenerType
           )

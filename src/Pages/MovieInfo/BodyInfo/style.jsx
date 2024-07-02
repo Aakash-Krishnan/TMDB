@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { CardActionArea } from "@mui/material";
 import Card from "@mui/material/Card";
-import { Divider } from "@mui/material";
 
 export const MoviesCard = styled(Card)`
   min-width: 160px;
