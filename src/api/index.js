@@ -1,6 +1,5 @@
 import axios from "axios";
 import { TOKEN, ACCOUNT_NO } from "../keys";
-// import { apiURLS } from "../constants";
 import { useNavigate } from "react-router-dom";
 
 export const APIInstance = axios.create({

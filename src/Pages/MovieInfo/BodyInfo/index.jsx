@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { apiURLS } from "../../../constants";
+import { getApiUrls, urlType } from "../../../constants";
 import { Container } from "./style";
 import { useEffect, useState } from "react";
 
@@ -28,7 +28,12 @@ const BodyInfo = ({ type, data }) => {
     const fetchRecommendations = async () => {
       try {
         const res = await APIInstance.get(
-          apiURLS.getRecommendations(type, data.id)
+          getApiUrls({
+            urlFor: urlType.RECOMMENDATION,
+            type,
+            id: data.id,
+            page: 1,
+          })
         );
         setRecommendations(res.data.results);
         setLoading(false);

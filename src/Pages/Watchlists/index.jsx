@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { APIInstance, useContentInfo } from "../../api";
-import { apiURLS } from "../../constants";
+import { getApiUrls, urlType } from "../../constants";
+
 import {
   CardWrapper,
   DisplayCardContainer,
@@ -31,7 +32,11 @@ const Watchlists = () => {
   useEffect(() => {
     const fetchData = async () => {
       const res = await APIInstance(
-        apiURLS.getWatchListsAndFavorites("watchlist", view)
+        getApiUrls({
+          urlFor: urlType.WATCHLISTS_FAVORITES,
+          getFor: "watchlist",
+          type: view,
+        })
       );
 
       setData(res.data.results);

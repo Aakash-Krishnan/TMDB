@@ -9,7 +9,7 @@ import { dataProcessor } from "../../utils/dataProcessor";
 import { APIInstance, getStatusAPI } from "../../api";
 import HeaderInfo from "./HeaderInfo";
 import BodyInfo from "./BodyInfo";
-import { apiURLS } from "../../constants";
+import { getApiUrls, urlType } from "../../constants";
 import { API_KEY } from "../../keys";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
 
@@ -26,13 +26,17 @@ const MovieInfo = () => {
     setLoading(true);
     setheaderData({});
 
-    const tvCrewApi = APIInstance.get(apiURLS.getTvCrewURL(id));
-    const tvRatingAPi = APIInstance.get(apiURLS.getTvRatingsURL(id));
+    const tvCrewApi = APIInstance.get(
+      getApiUrls({ urlFor: urlType.TV_CREW, id })
+    );
+    const tvRatingAPi = APIInstance.get(
+      getApiUrls({ urlFor: urlType.TV_RATINGS, id })
+    );
     const data = APIInstance.get(
-      apiURLS.getSelectedMovieTvURL(type, id, API_KEY)
+      getApiUrls({ urlFor: urlType.SELECTED_MOVIE_TV, type, id, API_KEY })
     );
     const watchProviders = APIInstance.get(
-      apiURLS.getSelectedMovieTvWatchProvidersURL(type, id)
+      getApiUrls({ urlFor: urlType.SELECTED_MOVIE_TV_WATCHPROVIDERS, type, id })
     );
 
     fetchData({ tvCrewApi, tvRatingAPi, data, watchProviders });

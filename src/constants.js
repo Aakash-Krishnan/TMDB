@@ -8,24 +8,52 @@ export const IMAGES_BASE_URL = "https://image.tmdb.org/t/p/original/";
 
 export const YOUTUBE_BASE_URL = " https://www.youtube.com/watch?v=";
 
-export const apiURLS = {
-  getSearchURL: (type, value, pageNo = 1) =>
-    `search/${type}?query=${value}&include_adult=false&language=en-US&page=${pageNo}`,
-  getTvCrewURL: (id) => `/tv/${id}/aggregate_credits?language=en-US`,
-  getTvRatingsURL: (id) => `/tv/${id}/content_ratings`,
-  getWatchListsAndFavorites: (getFor, type, page = 1) =>
-    `account/${ACCOUNT_NO}/${getFor}/${type}?language=en-US&page=${page}&sort_by=created_at.asc`,
-  getSelectedMovieTvURL: (type, id, API_KEY) =>
-    `${type}/${id}?api_key=${API_KEY}/content_ratings&append_to_response=credits,videos,images,release_dates,reviews`,
-  getSelectedMovieTvWatchProvidersURL: (type, id) =>
-    `${type}/${id}/watch/providers`,
-  getRecommendations: (type, id, page = 1) =>
-    `/${type}/${id}/recommendations?language=en-US&page=${page}`,
-  getTrendingURL: (path, endPoint) => `/${path}/all/${endPoint}?language=en-US`,
-  getTopMoviesURL: (path, pageNo = 1) =>
-    `movie/${path}?language=en-US&page=${pageNo}&append_to_response=media_type`,
-  getTopTvShowsURL: (path, pageNo = 1) =>
-    `tv/${path}?language=en-US&page=${pageNo}&append_to_response=media_type`,
+export const urlType = {
+  SEARCH: "search",
+  TV_CREW: "tvCrew",
+  TV_RATINGS: "tvRatings",
+  WATCHLISTS_FAVORITES: "watchListsAndFavorites",
+  SELECTED_MOVIE_TV: "selectedMovieTv",
+  SELECTED_MOVIE_TV_WATCHPROVIDERS: "selectedMovieTvWatchProviders",
+  RECOMMENDATION: "recommendations",
+  TRENDING: "trending",
+  TOP_MOVIES: "topMovies",
+  TOP_TV_SHOWS: "topTvShows",
+};
+
+export const getApiUrls = ({
+  urlFor,
+  type,
+  query,
+  id,
+  getFor,
+  API_KEY,
+  endPoint,
+  path,
+  page = 1,
+}) => {
+  switch (urlFor) {
+    case urlType.SEARCH:
+      return `search/${type}?query=${query}&include_adult=false&language=en-US&page=${page}`;
+    case urlType.TV_CREW:
+      return `/tv/${id}/aggregate_credits?language=en-US`;
+    case urlType.TV_RATINGS:
+      return `/tv/${id}/content_ratings`;
+    case urlType.WATCHLISTS_FAVORITES:
+      return `account/${ACCOUNT_NO}/${getFor}/${type}?language=en-US&page=${page}&sort_by=created_at.asc`;
+    case urlType.SELECTED_MOVIE_TV:
+      return `${type}/${id}?api_key=${API_KEY}/content_ratings&append_to_response=credits,videos,images,release_dates,reviews`;
+    case urlType.SELECTED_MOVIE_TV_WATCHPROVIDERS:
+      return `${type}/${id}/watch/providers`;
+    case urlType.RECOMMENDATION:
+      return `/${type}/${id}/recommendations?language=en-US&page=${page}`;
+    case urlType.TRENDING:
+      return `/${path}/all/${endPoint}?language=en-US`;
+    case urlType.TOP_MOVIES:
+      return `movie/${path}?language=en-US&page=${page}&append_to_response=media_type`;
+    case urlType.TOP_TV_SHOWS:
+      return `tv/${path}?language=en-US&page=${page}&append_to_response=media_type`;
+  }
 };
 
 export const navItems = [
@@ -69,7 +97,8 @@ export const queries = [
     id: uuidv4(),
     list: "Trending",
     listenerType: "",
-    getUrl: (path, endPoint) => apiURLS.getTrendingURL(path, endPoint),
+    getUrl: (path, endPoint) =>
+      getApiUrls({ urlFor: urlType.TRENDING, path, endPoint }),
     queryPath: [
       {
         id: uuidv4(),
@@ -89,7 +118,7 @@ export const queries = [
     id: uuidv4(),
     list: "Movies",
     listenerType: "movie",
-    getUrl: (path) => apiURLS.getTopMoviesURL(path),
+    getUrl: (path) => getApiUrls({ urlFor: urlType.TOP_MOVIES, path }),
     queryPath: [
       { id: uuidv4(), title: "Now Playing", path: "now_playing", endPoint: "" },
       { id: uuidv4(), title: "Popular", path: "popular", endPoint: "" },
@@ -101,7 +130,7 @@ export const queries = [
     id: uuidv4(),
     list: "Tv Shows",
     listenerType: "tv",
-    getUrl: (path) => apiURLS.getTopTvShowsURL(path),
+    getUrl: (path) => getApiUrls({ urlFor: urlType.TOP_TV_SHOWS, path }),
     queryPath: [
       {
         id: uuidv4(),

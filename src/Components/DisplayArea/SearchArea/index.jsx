@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { apiURLS } from "../../../constants";
+import { getApiUrls, urlType } from "../../../constants";
 import { APIInstance, useContentInfo } from "../../../api";
 import DisplayCard from "../../DisplayCard";
 
@@ -55,7 +55,7 @@ const SearchArea = () => {
   const fetchData = useCallback(async () => {
     try {
       const data = await APIInstance.get(
-        apiURLS.getSearchURL(view, query, page)
+        getApiUrls({ urlFor: urlType.SEARCH, type: view, query, page })
       );
       const res = await data.data;
 
