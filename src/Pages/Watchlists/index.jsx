@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { APIInstance, useContentInfo } from "../../api";
 import { getApiUrls, urlType } from "../../constants";
 
@@ -20,32 +20,67 @@ const Watchlists = () => {
   const [data, setData] = useState([]);
   const [view, setView] = useState("movies");
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+
   const { handleNavigation } = useContentInfo();
+
+  const lastElementRef = useRef(null);
+
+  useEffect(() => {
+    if (loading || page === -1) return;
+    const observer = new IntersectionObserver((entries) => {
+      const el = entries[0];
+      if (el && el.isIntersecting) {
+        setPage((prev) => prev + 1);
+      }
+    });
+
+    if (lastElementRef.current) observer.observe(lastElementRef.current);
+
+    return () => {
+      if (lastElementRef.current) observer.disconnect(lastElementRef.current);
+    };
+  }, [page, loading]);
+
+  console.log(page);
+
+  useEffect(() => {
+    setLoading(true);
+    fetchData();
+  }, [view, page]);
+
+  const fetchData = async () => {
+    if (page === -1) {
+      setLoading(false);
+      return;
+    }
+    const res = await APIInstance(
+      getApiUrls({
+        urlFor: urlType.WATCHLISTS_FAVORITES,
+        getFor: "watchlist",
+        type: view,
+        page,
+      })
+    );
+    if (res.data.results.length === 0) {
+      setLoading(false);
+      setPage(-1);
+      return;
+    }
+    setData((prev) => [...prev, ...res.data.results]);
+    setLoading(false);
+  };
 
   const handleChange = (event, newView) => {
     event.preventDefault();
     if (newView) {
+      setData([]);
+      setPage(1);
       setView(newView);
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await APIInstance(
-        getApiUrls({
-          urlFor: urlType.WATCHLISTS_FAVORITES,
-          getFor: "watchlist",
-          type: view,
-        })
-      );
-
-      setData(res.data.results);
-      setLoading(false);
-    };
-    fetchData();
-  }, [view]);
-
-  console.log(data);
+  // console.log(data);
   return (
     <WholeDiv>
       <DisplayCardContainer>
@@ -67,11 +102,7 @@ const Watchlists = () => {
 
         <div>
           <CardWrapper>
-            {loading ? (
-              <SpinnerWrapper>
-                <CircularProgress />
-              </SpinnerWrapper>
-            ) : (
+            {data.length > 0 &&
               data.map((item) => {
                 return (
                   <div key={item.id}>
@@ -82,11 +113,11 @@ const Watchlists = () => {
                     />
                   </div>
                 );
-              })
-            )}
+              })}
           </CardWrapper>
         </div>
       </DisplayCardContainer>
+      {<div ref={lastElementRef}></div>}
     </WholeDiv>
   );
 };

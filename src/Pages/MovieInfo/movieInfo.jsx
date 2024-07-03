@@ -25,7 +25,6 @@ const MovieInfo = () => {
   useEffect(() => {
     setLoading(true);
     setheaderData({});
-
     const tvCrewApi = APIInstance.get(
       getApiUrls({ urlFor: urlType.TV_CREW, id })
     );

@@ -85,7 +85,7 @@ const HomeContentPage = ({
         <div>
           <CardWrapper>
             {loading ? (
-              <SpinnerWrapper>
+              <SpinnerWrapper style={{ height: "350px" }}>
                 <CircularProgress />
               </SpinnerWrapper>
             ) : (

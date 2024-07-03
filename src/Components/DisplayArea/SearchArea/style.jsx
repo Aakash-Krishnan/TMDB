@@ -16,9 +16,10 @@ export const Container = styled.div`
       position: sticky;
       top: 90px;
 
-      .search-view-button {
+      .search-view-title {
         padding: 20px;
         cursor: auto;
+        text-align: center;
         background-color: #01b4e4;
         border: none;
         outline: none;

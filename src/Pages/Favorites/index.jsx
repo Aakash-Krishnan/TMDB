@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { APIInstance, useContentInfo } from "../../api";
 import { getApiUrls, urlType } from "../../constants";
 
@@ -30,22 +30,24 @@ const Favorites = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await APIInstance(
-        getApiUrls({
-          urlFor: urlType.WATCHLISTS_FAVORITES,
-          getFor: "favorite",
-          type: view,
-        })
-      );
-
-      setData(res.data.results);
-      setLoading(false);
-    };
+    setLoading(true);
     fetchData();
   }, [view]);
 
-  console.log(data);
+  const fetchData = useCallback(async () => {
+    const res = await APIInstance(
+      getApiUrls({
+        urlFor: urlType.WATCHLISTS_FAVORITES,
+        getFor: "favorite",
+        type: view,
+      })
+    );
+
+    setData(res.data.results);
+    setLoading(false);
+  }, [view]);
+
+  // console.log(data);
   return (
     <WholeDiv>
       <DisplayCardContainer>

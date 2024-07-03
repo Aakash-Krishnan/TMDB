@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getApiUrls, urlType } from "../../../constants";
+import { getApiUrls, searchViews, urlType } from "../../../constants";
 import { APIInstance, useContentInfo } from "../../../api";
 import DisplayCard from "../../DisplayCard";
 
@@ -17,8 +17,6 @@ const SearchArea = () => {
   const { handleNavigation } = useContentInfo();
   const lastElementRef = useRef(null);
 
-  const [contentType, setContentType] = useState(type);
-
   const [error, setError] = useState(false);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
@@ -28,7 +26,6 @@ const SearchArea = () => {
 
   const handleChange = (event, nextView) => {
     if (nextView) {
-      setContentType(nextView);
       setLoading(true);
       setError(false);
       setPage(1);
@@ -38,6 +35,7 @@ const SearchArea = () => {
   };
 
   useEffect(() => {
+    if (page === -1) return;
     const observer = new IntersectionObserver((entries) => {
       const el = entries[0];
       if (el && el.isIntersecting) {
@@ -50,15 +48,29 @@ const SearchArea = () => {
     return () => {
       if (lastElementRef.current) observer.disconnect(lastElementRef.current);
     };
-  }, []);
+  }, [page, loading]);
 
-  const fetchData = useCallback(async () => {
+  // NOTE: Need help
+  useEffect(() => {
+    // setLoading(true);
+    fetchData();
+  }, [view, page]);
+
+  const fetchData = async () => {
+    if (page === -1) {
+      setLoading(false);
+      return;
+    }
     try {
       const data = await APIInstance.get(
         getApiUrls({ urlFor: urlType.SEARCH, type: view, query, page })
       );
       const res = await data.data;
-
+      if (res.results.length === 0) {
+        setLoading(false);
+        setPage(-1);
+        return;
+      }
       setTotalResults(res.total_results);
       setSearchData((prev) => [...prev, ...res.results]);
       setLoading(false);
@@ -71,12 +83,7 @@ const SearchArea = () => {
       setTotalResults(0);
       setError(true);
     }
-  }, [view]);
-
-  // NOTE: Need help
-  useEffect(() => {
-    fetchData();
-  }, [view, page]);
+  };
 
   return (
     <Container>
@@ -89,26 +96,28 @@ const SearchArea = () => {
             onChange={handleChange}
             style={{ width: "100%" }}
           >
-            <button className="search-view-button">Search Results</button>
-            <ToggleButton value="movie" aria-label="movie">
-              <p>Movies {view === "movie" && totalResults}</p>
-            </ToggleButton>
-            <ToggleButton value="tv" aria-label="tv">
-              <p>Tv Shows {view === "tv" && totalResults}</p>
-            </ToggleButton>
-            <ToggleButton value="person" aria-label="person">
-              <p>People {view === "person" && totalResults}</p>
-            </ToggleButton>
-            <ToggleButton value="collection" aria-label="collection">
-              <p>Collections {view === "collection" && totalResults}</p>
-            </ToggleButton>
+            <div className="search-view-title">Search Results</div>
+            {searchViews.map((item) => {
+              return (
+                <ToggleButton
+                  key={item.key}
+                  value={item.view}
+                  aria-label={item.view}
+                >
+                  <p>
+                    {item.title}{" "}
+                    {!loading && view === item.view && totalResults}
+                  </p>
+                </ToggleButton>
+              );
+            })}
           </ToggleButtonGroup>
         </div>
       </div>
       <div className="card-display-area">
         {error ? (
           <h1>NO match</h1>
-        ) : Object.keys(searchData).length === 0 ? (
+        ) : loading || Object.keys(searchData).length === 0 ? (
           <SpinnerWrapper>
             <CircularProgress />
           </SpinnerWrapper>
@@ -121,18 +130,12 @@ const SearchArea = () => {
                     <DisplayCard
                       item={item}
                       handleClick={handleNavigation}
-                      listenerType={contentType}
+                      listenerType={view}
                     />
                   </div>
                 );
               })}
             </CardWrapper>
-
-            {loading && (
-              <SpinnerWrapper>
-                <CircularProgress />
-              </SpinnerWrapper>
-            )}
           </>
         )}
 

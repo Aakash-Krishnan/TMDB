@@ -82,13 +82,36 @@ export const navItems = [
     path: "/tv-shows",
     title: "TV Shows",
   },
-  {
-    path: "/contact",
-    title: "Contact",
-  },
+  // {
+  //   path: "/contact",
+  //   title: "Contact",
+  // },
   {
     path: "/sign-in",
     title: "Sign In",
+  },
+];
+
+export const searchViews = [
+  {
+    id: 1,
+    view: "movie",
+    title: "Movies",
+  },
+  {
+    id: 2,
+    view: "tv",
+    title: "Tv Shows",
+  },
+  {
+    id: 3,
+    view: "person",
+    title: "People",
+  },
+  {
+    id: 4,
+    view: "collection",
+    title: "Collections",
   },
 ];
 
