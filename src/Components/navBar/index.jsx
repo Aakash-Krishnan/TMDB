@@ -1,11 +1,10 @@
-import "./style.css";
-
 import { NavLink } from "react-router-dom";
 import { TMDB_LOGO, navItems } from "../../constants";
+import { Container } from "./style";
 
 const Navbar = () => {
   return (
-    <nav className="container">
+    <Container>
       <div className="nav-left">
         <NavLink to="/">
           <img src={TMDB_LOGO} alt="tmdb-logo" className="logo" />
@@ -28,7 +27,7 @@ const Navbar = () => {
           ))}
         </ul>
       </div>
-    </nav>
+    </Container>
   );
 };
 

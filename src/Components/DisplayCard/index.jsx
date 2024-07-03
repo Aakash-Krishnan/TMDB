@@ -7,16 +7,18 @@ import { CardActionArea } from "@mui/material";
 import { IMAGES_BASE_URL } from "../../constants";
 
 import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
 
-import { MoviesCard } from "./style";
+import {
+  CardContentWrapper,
+  MoviesCard,
+  ProgressCircle,
+  ProgressLabel,
+} from "./style";
 
 const DisplayCard = ({ item, handleClick, listenerType }) => {
-  console.log("listenerType", listenerType);
   return (
     <div>
       <MoviesCard
-        style={{ borderRadius: "16px" }}
         key={item.id}
         onClick={() =>
           handleClick(
@@ -36,15 +38,7 @@ const DisplayCard = ({ item, handleClick, listenerType }) => {
           />
           {item.vote_average && (
             <>
-              <Box
-                sx={{
-                  position: "absolute",
-                  display: "inline-flex",
-                  top: "180px",
-                  left: "6px",
-                  color: "black",
-                }}
-              >
+              <ProgressCircle>
                 <CircularProgress
                   variant="determinate"
                   value={Math.round(item.vote_average * 10)}
@@ -57,50 +51,26 @@ const DisplayCard = ({ item, handleClick, listenerType }) => {
                       : "inherit"
                   }
                 />
-                <Box
-                  sx={{
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    position: "absolute",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <p style={{ color: "white", fontSize: "14px" }}>
+                <ProgressLabel>
+                  <p className="label">
                     {`${Math.round(item.vote_average * 10)}%`}
                   </p>
-                </Box>
-              </Box>
+                </ProgressLabel>
+              </ProgressCircle>
             </>
           )}
 
           <CardContent stye={{ paddingBottom: "0px" }}>
-            <div
-              style={{
-                minHeight: "70px",
-                maxHeight: "80px",
-              }}
-            >
-              <p
-                style={{
-                  color: "white",
-                  height: "32px",
-                  marginTop: "10px",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
+            <CardContentWrapper>
+              <div>
                 <span>
                   {item.original_title ?? item.name ?? item.original_name}
                 </span>
-                <span style={{ color: "grey", marginTop: "5px" }}>
+                <span className="air-date">
                   {item.release_date ?? item.first_air_date}
                 </span>
-              </p>
-            </div>
+              </div>
+            </CardContentWrapper>
           </CardContent>
         </CardActionArea>
       </MoviesCard>

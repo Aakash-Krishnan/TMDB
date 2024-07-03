@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import { CardActionArea } from "@mui/material";
 
+export const HomeContainer = styled.div`
+  position: relative;
+`;
+
 export const WholeDiv = styled.div`
   display: flex;
   width: 90%;

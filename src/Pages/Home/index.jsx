@@ -3,6 +3,7 @@ import SearchBox from "../../Components/Search";
 
 import { queries } from "../../constants";
 import HomeContentPage from "./homeContent";
+import { HomeContainer } from "./style";
 
 const HomePage = () => {
   const [images, setImages] = useState([]);
@@ -14,7 +15,7 @@ const HomePage = () => {
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <HomeContainer>
       <SearchBox images={images} />
 
       {queries.map((query) => {
@@ -24,7 +25,7 @@ const HomePage = () => {
           </div>
         );
       })}
-    </div>
+    </HomeContainer>
   );
 };
 

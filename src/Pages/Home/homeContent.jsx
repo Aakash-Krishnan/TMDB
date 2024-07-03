@@ -1,9 +1,7 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
 
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -15,6 +13,7 @@ import {
   CardWrapper,
 } from "./style";
 import DisplayCard from "../../Components/DisplayCard";
+import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
 
 const HomeContentPage = ({
   list,
@@ -31,24 +30,30 @@ const HomeContentPage = ({
   const [loading, setLoading] = useState(true);
   const [movieData, setMovieData] = useState([]);
 
-  const handleChange = (event, newSpecials) => {
+  const handleChange = useCallback((event, newSpecials) => {
     event.preventDefault();
     if (newSpecials) {
       setSpecials(newSpecials);
     }
-  };
+  }, []);
+
+  const getDataAndBackDrops = useCallback(() => {
+    const endPoint = queryPath[0].endPoint ? specials : undefined;
+    const path = queryPath[0].endPoint ? queryPath[0].path : specials;
+    const url = getUrl(path, endPoint);
+    APIInstance.get(url)
+      .then((res) => {
+        processImages(res.data.results);
+        setMovieData(res.data.results);
+        setLoading(false);
+      })
+      .catch((err) => console.log("ERROR COLLECTING IMAGES:", err));
+  }, [getUrl, processImages, queryPath, specials]);
 
   useEffect(() => {
     setLoading(true);
 
-    const endPoint = queryPath[0].endPoint ? specials : undefined;
-    const path = queryPath[0].endPoint ? queryPath[0].path : specials;
-    const url = getUrl(path, endPoint);
-    APIInstance.get(url).then((res) => {
-      processImages(res.data.results);
-      setMovieData(res.data.results);
-      setLoading(false);
-    });
+    getDataAndBackDrops();
   }, [specials, getUrl, queryPath]);
 
   return (
@@ -80,16 +85,9 @@ const HomeContentPage = ({
         <div>
           <CardWrapper>
             {loading ? (
-              <Box
-                sx={{
-                  display: "flex",
-                  placeItems: "center",
-                  height: "350px",
-                  margin: "auto",
-                }}
-              >
+              <SpinnerWrapper>
                 <CircularProgress />
-              </Box>
+              </SpinnerWrapper>
             ) : (
               movieData.map((item) => {
                 return (

@@ -8,12 +8,12 @@ import {
   WholeDiv,
 } from "./style";
 import {
-  Box,
   CircularProgress,
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
 import DisplayCard from "../../Components/DisplayCard";
+import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
 
 const Favorites = () => {
   const [data, setData] = useState([]);
@@ -62,16 +62,9 @@ const Favorites = () => {
         <div>
           <CardWrapper>
             {loading ? (
-              <Box
-                sx={{
-                  display: "flex",
-                  placeItems: "center",
-                  height: "350px",
-                  margin: "auto",
-                }}
-              >
+              <SpinnerWrapper>
                 <CircularProgress />
-              </Box>
+              </SpinnerWrapper>
             ) : (
               data.map((item) => {
                 return (

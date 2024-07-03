@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { CardActionArea } from "@mui/material";
 
 export const WholeDiv = styled.div`
   display: flex;
@@ -23,8 +22,4 @@ export const CardWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-`;
-
-export const CardActionAreaDiv = styled(CardActionArea)`
-  background-color: "#0d253f";
 `;

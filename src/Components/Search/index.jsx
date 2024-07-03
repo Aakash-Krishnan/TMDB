@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./style.css";
 
 import { IMAGES_BASE_URL } from "../../constants";
 
@@ -40,27 +39,16 @@ const SearchBox = ({ images }) => {
       imgurl={`${IMAGES_BASE_URL}${images[currentImageIndex]}`}
       className="search-container"
     >
-      <Content
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          width: "80%",
-          margin: "auto",
-        }}
-      >
-        <div style={{ marginBottom: "20px" }}>
+      <Content>
+        <div className="search-title">
           <h1>Welcome</h1>
           <h2>
             Millions of movies, TV shows and people to discover. Explore now.
           </h2>
         </div>
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div className="search-select-wrapper">
           <Select
-            style={{
-              width: "124px",
-              color: "white",
-              border: "1px solid white",
-            }}
+            className="search-select"
             value={searchType}
             onChange={(event) => setSearchType(event.target.value)}
             inputProps={{ "aria-label": "Type" }}
@@ -69,41 +57,21 @@ const SearchBox = ({ images }) => {
             <MenuItem value="tv">TV Show</MenuItem>
           </Select>
 
-          <FormControl
-            className="search-form"
-            variant="outlined"
-            style={{ width: "100%", borderRadius: "20px", color: "red" }}
-          >
+          <FormControl className="search-form" variant="outlined">
             <InputLabel
               className="search-input"
               htmlFor="outlined-adornment-search"
-              style={{
-                color: "white",
-              }}
             >
               Search
             </InputLabel>
             <OutlinedInput
-              style={{
-                border: "2px solid white",
-                color: "white",
-                fontWeight: 800,
-                letterSpacing: "1px",
-                fontSize: "20px",
-                borderRadius: "80xp ",
-                outline: "none",
-              }}
+              className="search-label"
               id="outlined-adornment-search"
               type={"text"}
               onKeyDown={handleKeyDown}
               endAdornment={
                 <InputAdornment position="end">
-                  <SearchIcon
-                    style={{
-                      cursor: "pointer",
-                      color: "white",
-                    }}
-                  />
+                  <SearchIcon className="search-icon" />
                 </InputAdornment>
               }
               label="search"
