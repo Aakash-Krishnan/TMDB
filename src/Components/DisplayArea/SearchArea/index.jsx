@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getApiUrls, searchViews, urlType } from "../../../constants";
 import { APIInstance, useContentInfo } from "../../../api";
@@ -35,7 +35,7 @@ const SearchArea = () => {
   };
 
   useEffect(() => {
-    if (page === -1) return;
+    if (loading || page === -1) return;
     const observer = new IntersectionObserver((entries) => {
       const el = entries[0];
       if (el && el.isIntersecting) {
@@ -52,13 +52,12 @@ const SearchArea = () => {
 
   // NOTE: Need help
   useEffect(() => {
-    // setLoading(true);
+    setLoading(true);
     fetchData();
   }, [view, page]);
 
   const fetchData = async () => {
     if (page === -1) {
-      setLoading(false);
       return;
     }
     try {
@@ -66,24 +65,25 @@ const SearchArea = () => {
         getApiUrls({ urlFor: urlType.SEARCH, type: view, query, page })
       );
       const res = await data.data;
+
+      if (res.results.length === 0 && searchData.length === 0) {
+        throw new Error("No results found");
+      }
       if (res.results.length === 0) {
-        setLoading(false);
         setPage(-1);
         return;
       }
       setTotalResults(res.total_results);
       setSearchData((prev) => [...prev, ...res.results]);
-      setLoading(false);
-
-      if (res.results.length === 0 && searchData.length === 0) {
-        throw new Error("No results found");
-      }
     } catch (err) {
-      console.log("SEARCH ERROR", err);
       setTotalResults(0);
       setError(true);
+    } finally {
+      setLoading(false);
     }
   };
+
+  console.log(searchData);
 
   return (
     <Container>
@@ -116,17 +116,16 @@ const SearchArea = () => {
       </div>
       <div className="card-display-area">
         {error ? (
-          <h1>NO match</h1>
-        ) : loading || Object.keys(searchData).length === 0 ? (
-          <SpinnerWrapper>
-            <CircularProgress />
-          </SpinnerWrapper>
-        ) : (
+          <h1>No results found</h1>
+        ) : searchData.length > 0 ? (
           <>
             <CardWrapper>
-              {searchData.map((item) => {
+              {searchData.map((item, idx) => {
                 return (
-                  <div key={item.id}>
+                  <div
+                    key={item.id}
+                    ref={idx === item.length - 1 ? lastElementRef : null}
+                  >
                     <DisplayCard
                       item={item}
                       handleClick={handleNavigation}
@@ -137,9 +136,17 @@ const SearchArea = () => {
               })}
             </CardWrapper>
           </>
+        ) : (
+          !loading && <h1>No data found</h1>
         )}
 
-        <div ref={lastElementRef}></div>
+        {loading && (
+          <SpinnerWrapper>
+            <CircularProgress />
+          </SpinnerWrapper>
+        )}
+
+        {/* <div ref={lastElementRef}></div> */}
       </div>
     </Container>
   );

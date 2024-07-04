@@ -1,4 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable react-hooks/exhaustive-deps */
+
+import { useEffect, useReducer, useRef } from "react";
 import { APIInstance, useContentInfo } from "../../api";
 import { getApiUrls, urlType } from "../../constants";
 
@@ -15,23 +18,26 @@ import {
 } from "@mui/material";
 import DisplayCard from "../../Components/DisplayCard";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
+import { favWLReducer, favWlInitialState } from "../../reducers/favWLReducer";
 
 const Watchlists = () => {
-  const [data, setData] = useState([]);
-  const [view, setView] = useState("movies");
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
+  const [state, dispatch] = useReducer(favWLReducer, favWlInitialState);
+  const { data, view, loading, page } = state;
 
   const { handleNavigation } = useContentInfo();
 
   const lastElementRef = useRef(null);
 
   useEffect(() => {
+    dispatch({ type: "RESET" });
+  }, []);
+
+  useEffect(() => {
     if (loading || page === -1) return;
     const observer = new IntersectionObserver((entries) => {
       const el = entries[0];
       if (el && el.isIntersecting) {
-        setPage((prev) => prev + 1);
+        dispatch({ type: "SET_PAGE", payload: page + 1 });
       }
     });
 
@@ -42,41 +48,42 @@ const Watchlists = () => {
     };
   }, [page, loading]);
 
-  // console.log(page);
-
   useEffect(() => {
-    setLoading(true);
+    dispatch({ type: "LOADING" });
+
     fetchData();
   }, [view, page]);
 
   const fetchData = async () => {
-    if (page === -1) {
-      setLoading(false);
-      return;
+    try {
+      if (page === -1) {
+        return;
+      }
+      const res = await APIInstance(
+        getApiUrls({
+          urlFor: urlType.WATCHLISTS_FAVORITES,
+          getFor: "watchlist",
+          type: view,
+          page: page,
+        })
+      );
+      if (res.data.results.length === 0) {
+        dispatch({ type: "SET_PAGE", payload: -1 });
+        return;
+      }
+      dispatch({ type: "SET_DATA", payload: res.data.results });
+    } catch (err) {
+      console.error(err);
+      dispatch({ type: "ERROR", payload: err });
+    } finally {
+      dispatch({ type: "SETTLED" });
     }
-    const res = await APIInstance(
-      getApiUrls({
-        urlFor: urlType.WATCHLISTS_FAVORITES,
-        getFor: "watchlist",
-        type: view,
-        page,
-      })
-    );
-    if (res.data.results.length === 0) {
-      setLoading(false);
-      setPage(-1);
-      return;
-    }
-    setData((prev) => [...prev, ...res.data.results]);
-    setLoading(false);
   };
 
   const handleChange = (event, newView) => {
     event.preventDefault();
     if (newView) {
-      setData([]);
-      setPage(1);
-      setView(newView);
+      dispatch({ type: "SET_VIEW", payload: newView });
     }
   };
 

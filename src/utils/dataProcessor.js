@@ -1,8 +1,8 @@
 export const dataProcessor = (data, type, ratings, tvCrew) => {
-  console.log("DATA", data);
-  console.log("TYPE", type);
-  console.log("RATINGS", ratings);
-  console.log("TVCREW", tvCrew);
+  // console.log("DATA", data);
+  // console.log("TYPE", type);
+  // console.log("RATINGS", ratings);
+  // console.log("TVCREW", tvCrew);
   const id = data.id;
   const backdrop = data.backdrop_path;
   const poster = data.poster_path;

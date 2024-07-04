@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useReducer, useRef } from "react";
 import { APIInstance, useContentInfo } from "../../api";
 import { getApiUrls, urlType } from "../../constants";
 
@@ -15,23 +17,25 @@ import {
 } from "@mui/material";
 import DisplayCard from "../../Components/DisplayCard";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
+import { favWLReducer, favWlInitialState } from "../../reducers/favWLReducer";
 
 const Favorites = () => {
-  const [data, setData] = useState([]);
-  const [view, setView] = useState("movies");
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
+  const [state, dispatch] = useReducer(favWLReducer, favWlInitialState);
 
   const { handleNavigation } = useContentInfo();
 
   const lastElementRef = useRef(null);
 
   useEffect(() => {
-    if (loading || page === -1) return;
+    dispatch({ type: "RESET" });
+  }, []);
+
+  useEffect(() => {
+    if (state.loading || state.page === -1) return;
     const observer = new IntersectionObserver((entries) => {
       const el = entries[0];
       if (el && el.isIntersecting) {
-        setPage((prev) => prev + 1);
+        dispatch({ type: "SET_PAGE", payload: state.page + 1 });
       }
     });
 
@@ -40,43 +44,44 @@ const Favorites = () => {
     return () => {
       if (lastElementRef.current) observer.disconnect(lastElementRef.current);
     };
-  }, [page, loading]);
-
-  // console.log(page);
+  }, [state.page, state.loading]);
 
   useEffect(() => {
-    setLoading(true);
+    dispatch({ type: "LOADING" });
+
     fetchData();
-  }, [view, page]);
+  }, [state.view, state.page]);
 
   const fetchData = async () => {
-    if (page === -1) {
-      setLoading(false);
-      return;
+    try {
+      if (state.page === -1) {
+        return;
+      }
+      const res = await APIInstance(
+        getApiUrls({
+          urlFor: urlType.WATCHLISTS_FAVORITES,
+          getFor: "favorite",
+          type: state.view,
+          page: state.page,
+        })
+      );
+      if (res.data.results.length === 0) {
+        dispatch({ type: "SET_PAGE", payload: -1 });
+        return;
+      }
+      dispatch({ type: "SET_DATA", payload: res.data.results });
+    } catch (err) {
+      console.error(err);
+      dispatch({ type: "ERROR", payload: err });
+    } finally {
+      dispatch({ type: "SETTLED" });
     }
-    const res = await APIInstance(
-      getApiUrls({
-        urlFor: urlType.WATCHLISTS_FAVORITES,
-        getFor: "favorite",
-        type: view,
-        page,
-      })
-    );
-    if (res.data.results.length === 0) {
-      setLoading(false);
-      setPage(-1);
-      return;
-    }
-    setData((prev) => [...prev, ...res.data.results]);
-    setLoading(false);
   };
 
   const handleChange = (event, newView) => {
     event.preventDefault();
     if (newView) {
-      setData([]);
-      setPage(1);
-      setView(newView);
+      dispatch({ type: "SET_VIEW", payload: newView });
     }
   };
 
@@ -88,7 +93,7 @@ const Favorites = () => {
 
           <ToggleButtonGroup
             color="secondary"
-            value={view}
+            value={state.view}
             exclusive
             onChange={handleChange}
             aria-label="Platform"
@@ -101,27 +106,29 @@ const Favorites = () => {
 
         <div>
           <CardWrapper>
-            {data.length > 0
-              ? data.map((item, idx) => {
+            {state.data.length > 0
+              ? state.data.map((item, idx) => {
                   return (
                     <div
                       key={item.id}
-                      ref={idx === data.length - 1 ? lastElementRef : null}
+                      ref={
+                        idx === state.data.length - 1 ? lastElementRef : null
+                      }
                     >
                       <DisplayCard
                         item={item}
                         handleClick={handleNavigation}
-                        listenerType={view === "movies" ? "movie" : "tv"}
+                        listenerType={state.view === "movies" ? "movie" : "tv"}
                       />
                     </div>
                   );
                 })
-              : !loading && (
+              : !state.loading && (
                   <h1 style={{ marginTop: "20px" }}>No data found</h1>
                 )}
           </CardWrapper>
         </div>
-        {loading && (
+        {state.loading && (
           <SpinnerWrapper>
             <CircularProgress />
           </SpinnerWrapper>
