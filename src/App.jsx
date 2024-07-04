@@ -6,8 +6,7 @@ import MovieInfo from "./Pages/MovieInfo/movieInfo";
 import HomePage from "./Pages/Home";
 import SearchArea from "./Components/DisplayArea/SearchArea";
 import MyCollectionsList from "./Pages/MyCollectionsList";
-import DiscoverMovies from "./Pages/Discover/Movies";
-import DiscoverSeries from "./Pages/Discover/Series";
+import Discover from "./Pages/Discover";
 
 function App() {
   return (
@@ -18,8 +17,7 @@ function App() {
         <Route path="/info/:type/:id/:name" element={<MovieInfo />} />
         <Route path="/search/:type/:query" element={<SearchArea />} />
         <Route path="/my-list-of/:listType" element={<MyCollectionsList />} />
-        <Route path="/movies-discover" element={<DiscoverMovies />} />
-        <Route path="/series-discover" element={<DiscoverSeries />} />
+        <Route path="/:discoverType" element={<Discover />} />
       </Routes>
     </>
   );

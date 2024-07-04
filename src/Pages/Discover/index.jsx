@@ -1,63 +1,36 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useReducer } from "react";
 
 import { CardWrapper, DisplayCardContainer, WholeDiv } from "./style";
 import { CircularProgress } from "@mui/material";
-import { APIInstance, useContentInfo } from "../../../api";
-import { getApiUrls, urlType } from "../../../constants";
-import DisplayCard from "../../../Components/DisplayCard";
-import { SpinnerWrapper } from "../../../Components/DisplayArea/SearchArea/style";
-import { useInfiniteLoad } from "../../../hooks/useInfiniteLoad";
+import { APIInstance, useContentInfo } from "../../api";
+import { getApiUrls, urlType } from "../../constants";
+import DisplayCard from "../../Components/DisplayCard";
+import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
+import { useInfiniteLoad } from "../../hooks/useInfiniteLoad";
+import { useParams } from "react-router-dom";
+import {
+  collectionsInitialState,
+  collectionsReducer,
+} from "../../reducers/collectionsReducer";
 
-const initialState = {
-  data: [],
-  loading: false,
-  page: 1,
-  error: null,
-};
+const Discover = () => {
+  const { discoverType } = useParams();
+  const type = discoverType.split("-")[0];
 
-export function reducer(state, action) {
-  switch (action.type) {
-    case "RESET":
-      return { ...initialState };
-    case "LOADING":
-      return {
-        ...state,
-        loading: true,
-      };
-    case "SET_PAGE":
-      return {
-        ...state,
-        page: action.payload,
-      };
-    case "SET_DATA":
-      return {
-        ...state,
-        loading: false,
-        data: [...state.data, ...action.payload],
-      };
-    case "ERROR":
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
-    case "SETTLED":
-      return {
-        ...state,
-        loading: false,
-      };
-    default:
-      return state;
-  }
-}
-
-const DiscoverMovies = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const { data, loading, page } = state;
+  const [state, dispatch] = useReducer(
+    collectionsReducer,
+    collectionsInitialState
+  );
+  const { data, loading, page, view } = state;
 
   const { handleNavigation } = useContentInfo();
 
   const { lastElementRef, elementObserver } = useInfiniteLoad();
+
+  useEffect(() => {
+    dispatch({ type: "RESET", action: view });
+  }, [discoverType]);
 
   useEffect(() => {
     elementObserver({ loading, page, dispatch });
@@ -66,7 +39,7 @@ const DiscoverMovies = () => {
   useEffect(() => {
     dispatch({ type: "LOADING" });
     fetchData();
-  }, [page]);
+  }, [discoverType, page]);
 
   const fetchData = async () => {
     try {
@@ -76,7 +49,7 @@ const DiscoverMovies = () => {
       const res = await APIInstance(
         getApiUrls({
           urlFor: urlType.DISCOVER_MOVIES_SERIES,
-          type: "movie",
+          type,
           page,
         })
       );
@@ -96,7 +69,7 @@ const DiscoverMovies = () => {
   return (
     <WholeDiv>
       <DisplayCardContainer>
-        <h1>Discover Movies</h1>
+        <h1>Discover {type === "movie" ? "Movies" : "Tv Shows"}</h1>
 
         <div>
           <CardWrapper>
@@ -132,4 +105,4 @@ const DiscoverMovies = () => {
   );
 };
 
-export default DiscoverMovies;
+export default Discover;

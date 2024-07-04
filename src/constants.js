@@ -75,11 +75,11 @@ export const navItems = [
   },
 
   {
-    path: "/movies-discover",
+    path: "/movie-discover",
     title: "Movies",
   },
   {
-    path: "/series-discover",
+    path: "/tv-discover",
     title: "TV Shows",
   },
   // {

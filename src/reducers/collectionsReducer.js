@@ -12,6 +12,7 @@ export function collectionsReducer(state, action) {
       return {
         ...collectionsInitialState,
         view: action.payload,
+        loading: true,
       };
     case "LOADING":
       return {

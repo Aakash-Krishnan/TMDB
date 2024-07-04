@@ -21,7 +21,7 @@ import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
 import {
   collectionsInitialState,
   collectionsReducer,
-} from "../../reducers/favWLReducer";
+} from "../../reducers/collectionsReducer";
 import { useParams } from "react-router-dom";
 
 const MyCollectionsList = () => {
@@ -46,7 +46,6 @@ const MyCollectionsList = () => {
 
   useEffect(() => {
     dispatch({ type: "LOADING" });
-
     fetchData();
   }, [listType, view, page]);
 
