@@ -7,8 +7,12 @@ import { HomeContainer } from "./style";
 
 const HomePage = () => {
   const [images, setImages] = useState([]);
+  const [imageTag, setImageTag] = useState([]);
 
-  const processImages = (data) => {
+  const processImages = (data, specials) => {
+    if (imageTag.indexOf(specials) !== -1) return;
+
+    setImageTag((prev) => [...prev, specials]);
     data.map((item) => {
       setImages((prev) => [...prev, item.backdrop_path]);
     });
@@ -20,7 +24,7 @@ const HomePage = () => {
 
       {queries.map((query) => {
         return (
-          <div key={query.id}>
+          <div className="contents" key={query.id}>
             <HomeContentPage {...query} processImages={processImages} />
           </div>
         );

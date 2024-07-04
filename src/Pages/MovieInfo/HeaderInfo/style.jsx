@@ -3,6 +3,17 @@ import Card from "@mui/material/Card";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 
+export const ModalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  padding: "0px",
+  border: "none",
+  outline: "none",
+  p: 4,
+};
+
 export const HeaderContainer = styled.div`
   min-height: 600px;
   background-color: "black";
@@ -63,6 +74,12 @@ export const Content = styled.div`
   display: flex;
   gap: 40px;
   padding: 0px;
+
+  .image-list-item-bar-img {
+    margin: 10px 10px 0px 0px;
+    width: 40px;
+    height: 40px;
+  }
 `;
 
 export const FavIcon = styled(FavoriteIcon)`

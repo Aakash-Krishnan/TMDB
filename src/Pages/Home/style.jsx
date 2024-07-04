@@ -3,6 +3,10 @@ import { CardActionArea } from "@mui/material";
 
 export const HomeContainer = styled.div`
   position: relative;
+
+  .contents {
+    min-height: 350px;
+  }
 `;
 
 export const WholeDiv = styled.div`

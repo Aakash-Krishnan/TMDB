@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useCallback, useReducer } from "react";
 
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -14,6 +15,7 @@ import {
 } from "./style";
 import DisplayCard from "../../Components/DisplayCard";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
+import { homeInitialState, homeReducer } from "../../reducers/homeReducer";
 
 const HomeContentPage = ({
   list,
@@ -22,39 +24,46 @@ const HomeContentPage = ({
   listenerType,
   processImages,
 }) => {
-  const [specials, setSpecials] = useState(
-    queryPath[0].endPoint ? queryPath[0].endPoint : queryPath[0].path
-  );
+  const [state, dispatch] = useReducer(homeReducer, homeInitialState);
+  const { loading, data, specials } = state;
+
   const { handleNavigation } = useContentInfo();
 
-  const [loading, setLoading] = useState(true);
-  const [movieData, setMovieData] = useState([]);
+  useEffect(() => {
+    dispatch({
+      type: "SET_SPECIALS",
+      payload: queryPath[0].endPoint
+        ? queryPath[0].endPoint
+        : queryPath[0].path,
+    });
+  }, [queryPath]);
+
+  useEffect(() => {
+    dispatch({ type: "LOADING" });
+    getDataAndBackDrops();
+  }, [specials, getUrl, queryPath]);
+
+  const getDataAndBackDrops = useCallback(async () => {
+    try {
+      const endPoint = queryPath[0].endPoint ? specials : undefined;
+      const path = queryPath[0].endPoint ? queryPath[0].path : specials;
+      const url = getUrl(path, endPoint);
+
+      const res = await APIInstance.get(url);
+      dispatch({ type: "SET_DATA", payload: res.data.results });
+      processImages(res.data.results, specials);
+    } catch (err) {
+      dispatch({ type: "ERROR", payload: err });
+      console.log("ERROR COLLECTING IMAGES:", err);
+    }
+  }, [getUrl, queryPath, specials]);
 
   const handleChange = useCallback((event, newSpecials) => {
     event.preventDefault();
     if (newSpecials) {
-      setSpecials(newSpecials);
+      dispatch({ type: "SET_SPECIALS", payload: newSpecials });
     }
   }, []);
-
-  const getDataAndBackDrops = useCallback(() => {
-    const endPoint = queryPath[0].endPoint ? specials : undefined;
-    const path = queryPath[0].endPoint ? queryPath[0].path : specials;
-    const url = getUrl(path, endPoint);
-    APIInstance.get(url)
-      .then((res) => {
-        processImages(res.data.results);
-        setMovieData(res.data.results);
-        setLoading(false);
-      })
-      .catch((err) => console.log("ERROR COLLECTING IMAGES:", err));
-  }, [getUrl, processImages, queryPath, specials]);
-
-  useEffect(() => {
-    setLoading(true);
-
-    getDataAndBackDrops();
-  }, [specials, getUrl, queryPath]);
 
   return (
     <WholeDiv>
@@ -89,7 +98,7 @@ const HomeContentPage = ({
                 <CircularProgress />
               </SpinnerWrapper>
             ) : (
-              movieData.map((item) => {
+              data.map((item) => {
                 return (
                   <div key={item.id}>
                     <DisplayCard

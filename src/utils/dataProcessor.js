@@ -1,8 +1,4 @@
 export const dataProcessor = (data, type, ratings, tvCrew) => {
-  // console.log("DATA", data);
-  // console.log("TYPE", type);
-  // console.log("RATINGS", ratings);
-  // console.log("TVCREW", tvCrew);
   const id = data.id;
   const backdrop = data.backdrop_path;
   const poster = data.poster_path;
@@ -111,4 +107,25 @@ const minToHour = (minutes) => {
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
   return `${hours}h ${remainingMinutes}m`;
+};
+
+export const watchProviderProcessor = (watchProviders) => {
+  const provider =
+    Object.keys(watchProviders).length > 0
+      ? watchProviders.IN
+        ? watchProviders.IN.flatrate
+          ? watchProviders.IN.flatrate[0]
+          : null
+        : Object.keys(watchProviders).filter(
+            (key) => watchProviders[key]?.flatrate?.length > 0
+          )[0] != null
+        ? watchProviders[
+            Object.keys(watchProviders).filter(
+              (key) => watchProviders[key]?.flatrate?.length > 0
+            )[0]
+          ].flatrate[0]
+        : watchProviders[Object.keys(watchProviders)[0]].buy[0]
+      : null;
+
+  return provider;
 };

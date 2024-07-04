@@ -10,11 +10,12 @@ export const APIInstance = axios.create({
   responseType: "json",
 });
 
-export const getStatusAPI = (result, type, id, setheaderData) => {
+export const getStatusAPI = (result, type, id, callBackFn) => {
   APIInstance.get(`${type}/${id}/account_states`).then((res) => {
     result.favorite = res.data.favorite;
     result.watchlist = res.data.watchlist;
-    setheaderData(result);
+    
+    callBackFn(result)
   });
 };
 

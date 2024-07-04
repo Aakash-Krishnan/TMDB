@@ -7,6 +7,7 @@ import {
   FavIcon,
   HeaderContainer,
   WatchlistIcon,
+  ModalStyle,
 } from "./style";
 
 import { IMAGES_BASE_URL } from "../../../constants";
@@ -24,17 +25,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { ArrowToolTip } from "../../../Components/Tooltip";
 import { setStatusAPI } from "../../../api";
 import { useState } from "react";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  padding: "0px",
-  border: "none",
-  outline: "none",
-  p: 4,
-};
+import { watchProviderProcessor } from "../../../utils/dataProcessor";
 
 const HeaderInfo = ({
   headerData,
@@ -44,25 +35,9 @@ const HeaderInfo = ({
   data,
 }) => {
   const [modal, setModal] = useState(false);
-  console.log(watchProviders);
-  const watchProvider =
-    Object.keys(watchProviders).length > 0
-      ? watchProviders.IN
-        ? watchProviders.IN.flatrate
-          ? watchProviders.IN.flatrate[0]
-          : null
-        : Object.keys(watchProviders).filter(
-            (key) => watchProviders[key]?.flatrate?.length > 0
-          )[0] != null
-        ? watchProviders[
-            Object.keys(watchProviders).filter(
-              (key) => watchProviders[key]?.flatrate?.length > 0
-            )[0]
-          ].flatrate[0]
-        : watchProviders[Object.keys(watchProviders)[0]].buy[0]
-      : null;
 
-  // console.log("WATCH PROVIDER", watchProvider);
+  const watchProvider = watchProviderProcessor(watchProviders);
+
   return (
     <HeaderContainer>
       <BackgroundImg imgurl={`${IMAGES_BASE_URL}${headerData.backdrop}`}>
@@ -76,9 +51,7 @@ const HeaderInfo = ({
                   title={watchProvider.provider_name}
                   actionIcon={
                     <img
-                      style={{ marginRight: "10px", marginTop: "10px" }}
-                      width="40px"
-                      height="40px"
+                      className="image-list-item-bar-img"
                       src={`${IMAGES_BASE_URL}${watchProvider.logo_path}`}
                       alt="PROVIDER"
                     />
@@ -345,7 +318,7 @@ const HeaderInfo = ({
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Box sx={style}>
+          <Box sx={ModalStyle}>
             <iframe
               width="850px"
               height="450px"

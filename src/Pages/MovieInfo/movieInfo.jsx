@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { useParams } from "react-router";
 import { Container } from "./style";
 
@@ -12,19 +12,21 @@ import BodyInfo from "./BodyInfo";
 import { getApiUrls, urlType } from "../../constants";
 import { API_KEY } from "../../keys";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
+import {
+  infoInitialState,
+  informationReducer,
+} from "../../reducers/informationReducer";
 
 const MovieInfo = () => {
-  const [loading, setLoading] = useState(true);
   const { type, id } = useParams();
-  const [tvCrew, setTvCrew] = useState({});
-  const [tvRatings, setTvRatings] = useState({});
-  const [data, setData] = useState({});
-  const [watchProviders, setWatchProviders] = useState({});
-  const [headerData, setheaderData] = useState({});
+
+  const [state, dispatch] = useReducer(informationReducer, infoInitialState);
+  const { loading, tvCrew, tvRatings, data, watchProviders, headerData } =
+    state;
 
   useEffect(() => {
-    setLoading(true);
-    setheaderData({});
+    dispatch({ type: "LOADING" });
+
     const tvCrewApi = APIInstance.get(
       getApiUrls({ urlFor: urlType.TV_CREW, id })
     );
@@ -43,9 +45,11 @@ const MovieInfo = () => {
 
   useEffect(() => {
     if (!loading) {
-      setheaderData({});
+      dispatch({ type: "RESET_HEADER" });
       const res = dataProcessor(data, type, tvRatings, tvCrew);
-      getStatusAPI(res, type, data.id, setheaderData);
+      getStatusAPI(res, type, data.id, (result) =>
+        dispatch({ type: "SET_HEADER", payload: result })
+      );
     }
   }, [loading]);
 
@@ -59,11 +63,7 @@ const MovieInfo = () => {
       ]);
 
       pSettled.then((res) => {
-        setTvCrew(res[0]?.value?.data);
-        setTvRatings(res[1]?.value?.data);
-        setData(res[2]?.value?.data);
-        setWatchProviders(res[3]?.value?.data?.results);
-        setLoading(false);
+        dispatch({ type: "SET_DATA", payload: res });
       });
     },
     []
@@ -79,7 +79,9 @@ const MovieInfo = () => {
         <>
           <HeaderInfo
             headerData={headerData}
-            setheaderData={setheaderData}
+            setheaderData={(res) =>
+              dispatch({ type: "SET_HEADER", payload: res })
+            }
             type={type}
             watchProviders={watchProviders}
             data={data}
