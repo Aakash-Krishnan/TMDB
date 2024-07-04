@@ -98,22 +98,18 @@ export const navItems = [
 
 export const searchViews = [
   {
-    id: uuidv4(),
     view: "movie",
     title: "Movies",
   },
   {
-    id: uuidv4(),
     view: "tv",
     title: "Tv Shows",
   },
   {
-    id: uuidv4(),
     view: "person",
     title: "People",
   },
   {
-    id: uuidv4(),
     view: "collection",
     title: "Collections",
   },

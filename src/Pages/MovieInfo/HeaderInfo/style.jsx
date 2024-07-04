@@ -80,6 +80,170 @@ export const Content = styled.div`
     width: 40px;
     height: 40px;
   }
+
+  .header-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 30px;
+
+      :first-child {
+        font-weight: 900;
+      }
+    }
+
+    .certification-wrapper {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+
+      :first-child {
+        border: 2px solid white;
+        padding: 4px;
+      }
+    }
+
+    .score-wrapper {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      margin-top: 20px;
+
+      .rating-circle {
+        position: relative;
+        display: inline-flex;
+        color: tomato;
+
+        .score {
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          position: absolute;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          :first-child {
+            font-size: 18px;
+            color: white;
+
+            sup {
+              padding: 0px;
+              font-size: 10px;
+            }
+          }
+        }
+      }
+      .score-tag {
+        width: 10px;
+      }
+
+      .vibe-tag {
+        background-color: #0d253f;
+        padding: 10px;
+        border-radius: 20px;
+        margin: 0 8%;
+        cursor: pointer;
+      }
+    }
+    .collection-wrapper {
+      display: flex;
+      gap: 16px;
+      margin-top: 20px;
+      align-items: center;
+
+      .playlist-icon {
+        box-sizing: content-box;
+        border: 1px solid #0d253f;
+        border-radius: 50%;
+        background-color: #0d253f;
+        padding: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .favorite-icon {
+        box-sizing: content-box;
+        border: 1px solid #0d253f;
+        border-radius: 50%;
+        background-color: #0d253f;
+        padding: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        :first-child {
+          font-size: 20px;
+        }
+      }
+
+      .watchlist-icon {
+        box-sizing: content-box;
+        border: 1px solid #0d253f;
+        border-radius: 50%;
+        background-color: #0d253f;
+        padding: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        :first-child {
+          font-size: 20px;
+        }
+      }
+
+      .play-icon {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        :first-child {
+          font-size: 30px;
+        }
+      }
+    }
+
+    .tagline {
+      margin-top: 40px;
+      color: white;
+    }
+
+    .overview {
+      margin-top: 30px;
+
+      :first-child {
+        margin-bottom: 4px;
+      }
+    }
+
+    .crew-job-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10%;
+
+      .items {
+        margin-top: 20px;
+
+        :first-child {
+          flex-basis: 100%;
+        }
+      }
+    }
+  }
+`;
+
+export const ModalIframe = styled.iframe`
+  width: 850px;
+  height: 450px;
 `;
 
 export const FavIcon = styled(FavoriteIcon)`

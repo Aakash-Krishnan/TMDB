@@ -98,8 +98,6 @@ export const dataProcessor = (data, type, ratings, tvCrew) => {
     watchlist,
   };
 
-  // console.log("OBJ", obj);
-
   return obj;
 };
 

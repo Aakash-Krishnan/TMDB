@@ -8,6 +8,7 @@ import {
   HeaderContainer,
   WatchlistIcon,
   ModalStyle,
+  ModalIframe,
 } from "./style";
 
 import { IMAGES_BASE_URL } from "../../../constants";
@@ -61,35 +62,15 @@ const HeaderInfo = ({
             </ImageListItem>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "20px",
-                fontSize: "30px",
-              }}
-            >
-              <p style={{ fontWeight: "900" }}>{headerData.title}</p>
+          <div className="header-content-wrapper">
+            <div className="title">
+              <p>{headerData.title}</p>
               <p>({headerData.releaseYear})</p>
             </div>
 
-            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            <div className="certification-wrapper">
               {headerData?.finalCertificate?.certificate && (
-                <p
-                  style={{
-                    border: "2px solid white",
-                    padding: "4px",
-                  }}
-                >
-                  {headerData?.finalCertificate?.certificate}
-                </p>
+                <p>{headerData?.finalCertificate?.certificate}</p>
               )}
               {headerData?.releaseDate && <p>{headerData?.releaseDate}</p>}
 
@@ -107,21 +88,8 @@ const HeaderInfo = ({
                 </>
               ) : undefined}
             </div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                marginTop: "20px",
-              }}
-            >
-              <Box
-                sx={{
-                  position: "relative",
-                  display: "inline-flex",
-                  color: "tomato",
-                }}
-              >
+            <div className="score-wrapper">
+              <Box className="rating-circle">
                 <CircularProgress
                   color={
                     Math.round(headerData.score) > 70
@@ -135,62 +103,24 @@ const HeaderInfo = ({
                   size={50}
                   thickness={4}
                 />
-                <Box
-                  sx={{
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    position: "absolute",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <p style={{ color: "white", fontSize: "18px" }}>
+                <Box className="score">
+                  <p>
                     {`${Math.round(headerData.score)} `}
-                    <sup style={{ padding: "0px", fontSize: "10px" }}>%</sup>
+                    <sup>%</sup>
                   </p>
                 </Box>
               </Box>
-              <p style={{ width: "10px" }}>User Score</p>
+              <p className="score-tag">User Score</p>
 
               {/* <div style={{ margin: "0 8%" }}>EMOJI</div> */}
 
-              <div
-                style={{
-                  backgroundColor: "#0d253f",
-                  padding: "10px",
-                  borderRadius: "20px",
-                  margin: "0 8%",
-                  cursor: "pointer",
-                }}
-              >
+              <div className="vibe-tag">
                 <p>{`What's your vibe?`}</p>
               </div>
             </div>
-            <div
-              style={{
-                display: "flex",
-                gap: "16px",
-                marginTop: "20px",
-                alignItems: "center",
-              }}
-            >
+            <div className="collection-wrapper">
               <ArrowToolTip title={"Add to list"}>
-                <div
-                  style={{
-                    boxSizing: "content-box",
-                    border: "1px solid #0d253f",
-                    borderRadius: "50%",
-                    backgroundColor: "#0d253f",
-                    padding: "12px",
-                    cursor: "pointer",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
+                <div className="playlist-icon">
                   <PlaylistAddIcon />
                 </div>
               </ArrowToolTip>
@@ -203,17 +133,7 @@ const HeaderInfo = ({
                 }
               >
                 <div
-                  style={{
-                    boxSizing: "content-box",
-                    border: "1px solid #0d253f",
-                    borderRadius: "50%",
-                    backgroundColor: "#0d253f",
-                    padding: "12px",
-                    cursor: "pointer",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
+                  className="favorite-icon"
                   onClick={() => {
                     setStatusAPI(
                       "favorite",
@@ -225,10 +145,7 @@ const HeaderInfo = ({
                     );
                   }}
                 >
-                  <FavIcon
-                    isfav={String(headerData.favorite)}
-                    style={{ fontSize: "20px" }}
-                  />
+                  <FavIcon isfav={String(headerData.favorite)} />
                 </div>
               </ArrowToolTip>
 
@@ -240,17 +157,7 @@ const HeaderInfo = ({
                 }
               >
                 <div
-                  style={{
-                    boxSizing: "content-box",
-                    border: "1px solid #0d253f",
-                    borderRadius: "50%",
-                    backgroundColor: "#0d253f",
-                    padding: "12px",
-                    cursor: "pointer",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
+                  className="watchlist-icon"
                   onClick={() =>
                     setStatusAPI(
                       "watchlist",
@@ -262,47 +169,36 @@ const HeaderInfo = ({
                     )
                   }
                 >
-                  <WatchlistIcon
-                    style={{ fontSize: "20px" }}
-                    watchlist={String(headerData.watchlist)}
-                  />
+                  <WatchlistIcon watchlist={String(headerData.watchlist)} />
                 </div>
               </ArrowToolTip>
               <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  cursor: "pointer",
-                }}
+                className="play-icon"
                 onClick={() => {
                   setModal(true);
                 }}
               >
-                <PlayArrowIcon style={{ fontSize: "30px" }} />
+                <PlayArrowIcon />
                 <p>Play Trailer</p>
               </div>
             </div>
-            <div style={{ marginTop: "40px", color: "white" }}>
+
+            <div className="tagline">
               <i>{headerData.tagline}</i>
             </div>
 
             {headerData.overview !== "" && (
-              <div style={{ marginTop: "30px" }}>
-                <h3 style={{ marginBottom: "4px" }}>Overview</h3>
+              <div className="overview">
+                <h3>Overview</h3>
                 <p>{headerData.overview}</p>
               </div>
             )}
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "10%",
-              }}
-            >
+
+            <div className="crew-job-wrapper">
               {headerData?.crewJob &&
                 Object.entries(headerData?.crewJob).map(([key, value]) => (
-                  <div key={key} style={{ marginTop: "20px" }}>
-                    <h4 style={{ flexBasis: "100%" }}>{key}</h4>
+                  <div className="items" key={key}>
+                    <h4>{key}</h4>
                     <p>{value.join(", ")}</p>
                   </div>
                 ))}
@@ -319,12 +215,10 @@ const HeaderInfo = ({
           aria-describedby="modal-modal-description"
         >
           <Box sx={ModalStyle}>
-            <iframe
-              width="850px"
-              height="450px"
+            <ModalIframe
               src={`https://www.youtube.com/embed/${data.videos.results[0]?.key}`}
               allowFullScreen
-            ></iframe>
+            ></ModalIframe>
           </Box>
         </Modal>
       )}

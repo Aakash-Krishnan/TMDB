@@ -7,6 +7,7 @@ export const useInfiniteLoad = () => {
     if (loading || page === -1) return;
     const observer = new IntersectionObserver((entries) => {
       const el = entries[0];
+      // console.log("ELEMETN", el.isIntersecting);
       if (el && el.isIntersecting) {
         dispatch({ type: "SET_PAGE", payload: page + 1 });
       }
