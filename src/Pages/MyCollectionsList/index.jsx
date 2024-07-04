@@ -1,9 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react-hooks/exhaustive-deps */
-
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer } from "react";
 import { APIInstance, useContentInfo } from "../../api";
 import { getApiUrls, urlType } from "../../constants";
+import { useInfiniteLoad } from "../../hooks/useInfiniteLoad";
 
 import {
   CardWrapper,
@@ -18,41 +18,37 @@ import {
 } from "@mui/material";
 import DisplayCard from "../../Components/DisplayCard";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
-import { favWLReducer, favWlInitialState } from "../../reducers/favWLReducer";
+import {
+  collectionsInitialState,
+  collectionsReducer,
+} from "../../reducers/favWLReducer";
+import { useParams } from "react-router-dom";
 
-const Watchlists = () => {
-  const [state, dispatch] = useReducer(favWLReducer, favWlInitialState);
-  const { data, view, loading, page } = state;
+const MyCollectionsList = () => {
+  const { listType } = useParams();
 
   const { handleNavigation } = useContentInfo();
+  const { lastElementRef, elementObserver } = useInfiniteLoad();
 
-  const lastElementRef = useRef(null);
+  const [state, dispatch] = useReducer(
+    collectionsReducer,
+    collectionsInitialState
+  );
+  const { data, view, loading, page } = state;
 
   useEffect(() => {
-    dispatch({ type: "RESET" });
-  }, []);
+    dispatch({ type: "RESET", payload: "movies" });
+  }, [listType]);
 
   useEffect(() => {
-    if (loading || page === -1) return;
-    const observer = new IntersectionObserver((entries) => {
-      const el = entries[0];
-      if (el && el.isIntersecting) {
-        dispatch({ type: "SET_PAGE", payload: page + 1 });
-      }
-    });
-
-    if (lastElementRef.current) observer.observe(lastElementRef.current);
-
-    return () => {
-      if (lastElementRef.current) observer.disconnect(lastElementRef.current);
-    };
+    elementObserver({ loading, page, dispatch });
   }, [page, loading]);
 
   useEffect(() => {
     dispatch({ type: "LOADING" });
 
     fetchData();
-  }, [view, page]);
+  }, [listType, view, page]);
 
   const fetchData = async () => {
     try {
@@ -62,7 +58,7 @@ const Watchlists = () => {
       const res = await APIInstance(
         getApiUrls({
           urlFor: urlType.WATCHLISTS_FAVORITES,
-          getFor: "watchlist",
+          getFor: listType,
           type: view,
           page: page,
         })
@@ -83,7 +79,7 @@ const Watchlists = () => {
   const handleChange = (event, newView) => {
     event.preventDefault();
     if (newView) {
-      dispatch({ type: "SET_VIEW", payload: newView });
+      dispatch({ type: "RESET", payload: newView });
     }
   };
 
@@ -91,7 +87,7 @@ const Watchlists = () => {
     <WholeDiv>
       <DisplayCardContainer>
         <GenreContainer>
-          <h1>Watchlists</h1>
+          <h1>{listType === "favorite" ? "Favorite" : "Watch Lists"}</h1>
 
           <ToggleButtonGroup
             color="secondary"
@@ -134,10 +130,8 @@ const Watchlists = () => {
           </SpinnerWrapper>
         )}
       </DisplayCardContainer>
-
-      {/* {<div ref={lastElementRef}></div>} */}
     </WholeDiv>
   );
 };
 
-export default Watchlists;
+export default MyCollectionsList;

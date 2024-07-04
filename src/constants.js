@@ -66,11 +66,11 @@ export const navItems = [
   },
 
   {
-    path: "/fav",
+    path: "/my-list-of/favorite",
     title: "Favorites",
   },
   {
-    path: "/watch-list",
+    path: "/my-list-of/watchlist",
     title: "Watch List",
   },
 

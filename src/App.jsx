@@ -5,8 +5,7 @@ import Navbar from "./Components/navBar";
 import MovieInfo from "./Pages/MovieInfo/movieInfo";
 import HomePage from "./Pages/Home";
 import SearchArea from "./Components/DisplayArea/SearchArea";
-import Favorites from "./Pages/Favorites";
-import Watchlists from "./Pages/Watchlists";
+import MyCollectionsList from "./Pages/MyCollectionsList";
 import DiscoverMovies from "./Pages/Discover/Movies";
 import DiscoverSeries from "./Pages/Discover/Series";
 
@@ -18,8 +17,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/info/:type/:id/:name" element={<MovieInfo />} />
         <Route path="/search/:type/:query" element={<SearchArea />} />
-        <Route path="/fav" element={<Favorites />} />
-        <Route path="/watch-list" element={<Watchlists />} />
+        <Route path="/my-list-of/:listType" element={<MyCollectionsList />} />
         <Route path="/movies-discover" element={<DiscoverMovies />} />
         <Route path="/series-discover" element={<DiscoverSeries />} />
       </Routes>

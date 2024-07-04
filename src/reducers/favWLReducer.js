@@ -1,4 +1,4 @@
-export const favWlInitialState = {
+export const collectionsInitialState = {
   data: [],
   view: "movies",
   loading: false,
@@ -6,11 +6,12 @@ export const favWlInitialState = {
   error: null,
 };
 
-export function favWLReducer(state, action) {
+export function collectionsReducer(state, action) {
   switch (action.type) {
     case "RESET":
       return {
-        ...favWlInitialState,
+        ...collectionsInitialState,
+        view: action.payload,
       };
     case "LOADING":
       return {
@@ -21,14 +22,6 @@ export function favWLReducer(state, action) {
       return {
         ...state,
         page: action.payload,
-      };
-    case "SET_VIEW":
-      return {
-        ...state,
-        view: action.payload,
-        data: [],
-        page: 1,
-        loading: false,
       };
     case "SET_DATA":
       return {
