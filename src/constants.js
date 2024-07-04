@@ -19,6 +19,7 @@ export const urlType = {
   TRENDING: "trending",
   TOP_MOVIES: "topMovies",
   TOP_TV_SHOWS: "topTvShows",
+  DISCOVER_MOVIES_SERIES: "discoverMoviesSeries",
 };
 
 export const getApiUrls = ({
@@ -53,6 +54,8 @@ export const getApiUrls = ({
       return `movie/${path}?language=en-US&page=${page}&append_to_response=media_type`;
     case urlType.TOP_TV_SHOWS:
       return `tv/${path}?language=en-US&page=${page}&append_to_response=media_type`;
+    case urlType.DISCOVER_MOVIES_SERIES:
+      return `discover/${type}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc'`;
   }
 };
 
@@ -70,18 +73,19 @@ export const navItems = [
     path: "/watch-list",
     title: "Watch List",
   },
+
   {
-    path: "/people",
-    title: "People",
-  },
-  {
-    path: "/movies",
+    path: "/movies-discover",
     title: "Movies",
   },
   {
-    path: "/tv-shows",
+    path: "/series-discover",
     title: "TV Shows",
   },
+  // {
+  //   path: "/people",
+  //   title: "People",
+  // },
   // {
   //   path: "/contact",
   //   title: "Contact",

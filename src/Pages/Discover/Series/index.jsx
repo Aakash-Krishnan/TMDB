@@ -1,24 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { APIInstance, useContentInfo } from "../../api";
-import { getApiUrls, urlType } from "../../constants";
 
-import {
-  CardWrapper,
-  DisplayCardContainer,
-  GenreContainer,
-  WholeDiv,
-} from "./style";
-import {
-  CircularProgress,
-  ToggleButton,
-  ToggleButtonGroup,
-} from "@mui/material";
-import DisplayCard from "../../Components/DisplayCard";
-import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
+import { CardWrapper, DisplayCardContainer, WholeDiv } from "./style";
+import { CircularProgress } from "@mui/material";
+import { APIInstance, useContentInfo } from "../../../api";
+import { getApiUrls, urlType } from "../../../constants";
+import DisplayCard from "../../../Components/DisplayCard";
+import { SpinnerWrapper } from "../../../Components/DisplayArea/SearchArea/style";
 
-const Favorites = () => {
+const DiscoverSeries = () => {
   const [data, setData] = useState([]);
-  const [view, setView] = useState("movies");
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
 
@@ -42,12 +32,12 @@ const Favorites = () => {
     };
   }, [page, loading]);
 
-  // console.log(page);
+  console.log(page);
 
   useEffect(() => {
     setLoading(true);
     fetchData();
-  }, [view, page]);
+  }, [page]);
 
   const fetchData = async () => {
     if (page === -1) {
@@ -56,9 +46,8 @@ const Favorites = () => {
     }
     const res = await APIInstance(
       getApiUrls({
-        urlFor: urlType.WATCHLISTS_FAVORITES,
-        getFor: "favorite",
-        type: view,
+        urlFor: urlType.DISCOVER_MOVIES_SERIES,
+        type: "tv",
         page,
       })
     );
@@ -71,33 +60,10 @@ const Favorites = () => {
     setLoading(false);
   };
 
-  const handleChange = (event, newView) => {
-    event.preventDefault();
-    if (newView) {
-      setData([]);
-      setPage(1);
-      setView(newView);
-    }
-  };
-
   return (
     <WholeDiv>
       <DisplayCardContainer>
-        <GenreContainer>
-          <h1>Favorites</h1>
-
-          <ToggleButtonGroup
-            color="secondary"
-            value={view}
-            exclusive
-            onChange={handleChange}
-            aria-label="Platform"
-            style={{ height: "40px" }}
-          >
-            <ToggleButton value="movies">Movies</ToggleButton>
-            <ToggleButton value="tv">Tv Shows</ToggleButton>
-          </ToggleButtonGroup>
-        </GenreContainer>
+        <h1>Discover Movies</h1>
 
         <div>
           <CardWrapper>
@@ -111,7 +77,7 @@ const Favorites = () => {
                       <DisplayCard
                         item={item}
                         handleClick={handleNavigation}
-                        listenerType={view === "movies" ? "movie" : "tv"}
+                        listenerType={"tv"}
                       />
                     </div>
                   );
@@ -133,4 +99,4 @@ const Favorites = () => {
   );
 };
 
-export default Favorites;
+export default DiscoverSeries;

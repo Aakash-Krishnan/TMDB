@@ -38,7 +38,7 @@ const TrailersNPosters = ({ view, handleChange, images }) => {
         <CardWrapper className="card-wrapper">
           {images[view]?.map((item) => {
             return view === "videos" ? (
-              <div>
+              <div key={item.key}>
                 <iframe
                   className="video-player"
                   allowFullScreen

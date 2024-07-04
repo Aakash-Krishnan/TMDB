@@ -7,6 +7,8 @@ import HomePage from "./Pages/Home";
 import SearchArea from "./Components/DisplayArea/SearchArea";
 import Favorites from "./Pages/Favorites";
 import Watchlists from "./Pages/Watchlists";
+import DiscoverMovies from "./Pages/Discover/Movies";
+import DiscoverSeries from "./Pages/Discover/Series";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
         <Route path="/search/:type/:query" element={<SearchArea />} />
         <Route path="/fav" element={<Favorites />} />
         <Route path="/watch-list" element={<Watchlists />} />
+        <Route path="/movies-discover" element={<DiscoverMovies />} />
+        <Route path="/series-discover" element={<DiscoverSeries />} />
       </Routes>
     </>
   );

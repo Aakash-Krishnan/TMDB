@@ -42,7 +42,7 @@ const Watchlists = () => {
     };
   }, [page, loading]);
 
-  console.log(page);
+  // console.log(page);
 
   useEffect(() => {
     setLoading(true);
@@ -80,7 +80,6 @@ const Watchlists = () => {
     }
   };
 
-  // console.log(data);
   return (
     <WholeDiv>
       <DisplayCardContainer>
@@ -102,22 +101,34 @@ const Watchlists = () => {
 
         <div>
           <CardWrapper>
-            {data.length > 0 &&
-              data.map((item) => {
-                return (
-                  <div key={item.id}>
-                    <DisplayCard
-                      item={item}
-                      handleClick={handleNavigation}
-                      listenerType={view === "movies" ? "movie" : "tv"}
-                    />
-                  </div>
-                );
-              })}
+            {data.length > 0
+              ? data.map((item, idx) => {
+                  return (
+                    <div
+                      key={item.id}
+                      ref={idx === data.length - 1 ? lastElementRef : null}
+                    >
+                      <DisplayCard
+                        item={item}
+                        handleClick={handleNavigation}
+                        listenerType={view === "movies" ? "movie" : "tv"}
+                      />
+                    </div>
+                  );
+                })
+              : !loading && (
+                  <h1 style={{ marginTop: "20px" }}>No data found</h1>
+                )}
           </CardWrapper>
         </div>
+        {loading && (
+          <SpinnerWrapper>
+            <CircularProgress />
+          </SpinnerWrapper>
+        )}
       </DisplayCardContainer>
-      {<div ref={lastElementRef}></div>}
+
+      {/* {<div ref={lastElementRef}></div>} */}
     </WholeDiv>
   );
 };
