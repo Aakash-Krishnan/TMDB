@@ -1,6 +1,5 @@
 import axios from "axios";
 import { TOKEN, ACCOUNT_NO } from "../keys";
-import { useNavigate } from "react-router-dom";
 
 export const APIInstance = axios.create({
   baseURL: "https://api.themoviedb.org/3/",
@@ -14,8 +13,8 @@ export const getStatusAPI = (result, type, id, callBackFn) => {
   APIInstance.get(`${type}/${id}/account_states`).then((res) => {
     result.favorite = res.data.favorite;
     result.watchlist = res.data.watchlist;
-    
-    callBackFn(result)
+
+    callBackFn(result);
   });
 };
 
@@ -37,15 +36,4 @@ export const setStatusAPI = (
       setheaderData({ ...headerData, [statusFor]: val });
     }
   });
-};
-
-export const useContentInfo = () => {
-  const navigate = useNavigate();
-
-  const handleNavigation = (name, id, type) => {
-    name = name.split(" ").join("-");
-    navigate(`/info/${type}/${id}/${name}`);
-  };
-
-  return { handleNavigation };
 };

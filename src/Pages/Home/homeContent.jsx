@@ -6,7 +6,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { APIInstance, useContentInfo } from "../../api";
+import { APIInstance } from "../../api";
 import {
   WholeDiv,
   DisplayCardContainer,

@@ -14,7 +14,8 @@ import {
   ProgressCircle,
   ProgressLabel,
 } from "./style";
-import { useContentInfo } from "../../api";
+import { useContentInfo } from "../../hooks/useContentInfo";
+
 
 const DisplayCard = ({ item, listenerType }) => {
   const { handleNavigation } = useContentInfo();
