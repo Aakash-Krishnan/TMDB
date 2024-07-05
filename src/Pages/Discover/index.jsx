@@ -3,8 +3,7 @@ import { useEffect, useReducer } from "react";
 
 import { CardWrapper, DisplayCardContainer, WholeDiv } from "./style";
 import { CircularProgress } from "@mui/material";
-import { APIInstance } from "../../api";
-import { getApiUrls, urlType } from "../../constants";
+import { getDiscoversAPI } from "../../api";
 import DisplayCard from "../../Components/DisplayCard";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
 import { useInfiniteLoad } from "../../hooks/useInfiniteLoad";
@@ -40,33 +39,8 @@ const Discover = () => {
 
   useEffect(() => {
     dispatch({ type: "LOADING" });
-    fetchData();
+    getDiscoversAPI({ type, page, dispatch });
   }, [discoverType, page]);
-
-  const fetchData = async () => {
-    try {
-      if (page === -1) {
-        return;
-      }
-      const res = await APIInstance(
-        getApiUrls({
-          urlFor: urlType.DISCOVER_MOVIES_SERIES,
-          type,
-          page,
-        })
-      );
-      if (res.data.results.length === 0) {
-        dispatch({ type: "SET_PAGE", payload: -1 });
-        return;
-      }
-      dispatch({ type: "SET_DATA", payload: res.data.results });
-    } catch (err) {
-      console.error(err);
-      dispatch({ type: "ERROR", payload: err });
-    } finally {
-      dispatch({ type: "SETTLED" });
-    }
-  };
 
   return (
     <WholeDiv>

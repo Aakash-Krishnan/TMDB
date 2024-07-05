@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { getApiUrls, urlType } from "../../../constants";
 import { Container } from "./style";
 import { useEffect, useReducer } from "react";
 
-import { APIInstance } from "../../../api/index";
+import { getRecommendationsAPI } from "../../../api/index";
 import CastNCrew from "./CastNCrew";
 import LatestSeasonInfo from "./LatestSeasonInfo";
 import Reviews from "./Reviews";
@@ -29,36 +28,8 @@ const BodyInfo = ({ type, data }) => {
     dispatch({ type: "SET_IMAGES", payload: obj });
     dispatch({ type: "LOADING" });
 
-    fetchRecommendations();
+    getRecommendationsAPI({ id: data.id, type, dispatch });
   }, []);
-
-  const fetchRecommendations = async () => {
-    try {
-      console.log("ID", data.id);
-      console.log(
-        "URL",
-        getApiUrls({
-          urlFor: urlType.RECOMMENDATION,
-          type,
-          id: data.id,
-          page: 1,
-        })
-      );
-      const res = await APIInstance.get(
-        getApiUrls({
-          urlFor: urlType.RECOMMENDATION,
-          type,
-          id: data.id,
-          page: 1,
-        })
-      );
-      console.log(res);
-      dispatch({ type: "SET_RECOMMENDATIONS", payload: res.data.results });
-    } catch (err) {
-      dispatch({ type: "ERROR", payload: err });
-      console.log("ERROR ON RECOMMENDATIONS", err);
-    }
-  };
 
   const handleChange = (event, newView) => {
     if (newView) {
@@ -66,7 +37,7 @@ const BodyInfo = ({ type, data }) => {
     }
   };
 
-  console.log("RECOMMENDATIONS", recommendations);
+  // console.log("RECOMMENDATIONS", recommendations);
 
   return (
     <Container>

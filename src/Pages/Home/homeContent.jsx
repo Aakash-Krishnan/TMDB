@@ -6,7 +6,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { APIInstance } from "../../api";
+import { getDataAndBackDropsAPI } from "../../api";
 import {
   WholeDiv,
   DisplayCardContainer,
@@ -38,23 +38,14 @@ const HomeContentPage = ({
 
   useEffect(() => {
     dispatch({ type: "LOADING" });
-    getDataAndBackDrops();
+    getDataAndBackDropsAPI({
+      queryPath,
+      dispatch,
+      specials,
+      getUrl,
+      processImages,
+    });
   }, [specials, getUrl, queryPath]);
-
-  const getDataAndBackDrops = useCallback(async () => {
-    try {
-      const endPoint = queryPath[0].endPoint ? specials : undefined;
-      const path = queryPath[0].endPoint ? queryPath[0].path : specials;
-      const url = getUrl(path, endPoint);
-
-      const res = await APIInstance.get(url);
-      dispatch({ type: "SET_DATA", payload: res.data.results });
-      processImages(res.data.results, specials);
-    } catch (err) {
-      dispatch({ type: "ERROR", payload: err });
-      console.log("ERROR COLLECTING IMAGES:", err);
-    }
-  }, [getUrl, queryPath, specials]);
 
   const handleChange = useCallback((event, newSpecials) => {
     event.preventDefault();

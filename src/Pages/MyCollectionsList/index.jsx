@@ -1,8 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useReducer } from "react";
-import { APIInstance } from "../../api";
-import { getApiUrls, urlType } from "../../constants";
+import { getMyCollectionsAPI } from "../../api";
 import { useInfiniteLoad } from "../../hooks/useInfiniteLoad";
 
 import {
@@ -49,34 +48,8 @@ const MyCollectionsList = () => {
 
   useEffect(() => {
     dispatch({ type: "LOADING" });
-    fetchData();
+    getMyCollectionsAPI({ page, view, listType, dispatch });
   }, [listType, view, page]);
-
-  const fetchData = async () => {
-    try {
-      if (page === -1) {
-        return;
-      }
-      const res = await APIInstance(
-        getApiUrls({
-          urlFor: urlType.WATCHLISTS_FAVORITES,
-          getFor: listType,
-          type: view,
-          page: page,
-        })
-      );
-      if (res.data.results.length === 0) {
-        dispatch({ type: "SET_PAGE", payload: -1 });
-        return;
-      }
-      dispatch({ type: "SET_DATA", payload: res.data.results });
-    } catch (err) {
-      console.error(err);
-      dispatch({ type: "ERROR", payload: err });
-    } finally {
-      dispatch({ type: "SETTLED" });
-    }
-  };
 
   const handleChange = (event, newView) => {
     event.preventDefault();

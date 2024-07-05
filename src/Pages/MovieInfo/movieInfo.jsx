@@ -1,16 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { useParams } from "react-router";
 import { Container } from "./style";
 
 import { CircularProgress } from "@mui/material";
 
 import { dataProcessor } from "../../utils/dataProcessor";
-import { APIInstance, getStatusAPI } from "../../api";
+import { getMovieInfoDataAPI, getStatusAPI } from "../../api";
 import HeaderInfo from "./HeaderInfo";
 import BodyInfo from "./BodyInfo";
-import { getApiUrls, urlType } from "../../constants";
-import { API_KEY } from "../../keys";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
 import {
   infoInitialState,
@@ -27,20 +25,11 @@ const MovieInfo = () => {
   useEffect(() => {
     dispatch({ type: "LOADING" });
 
-    const tvCrewApi = APIInstance.get(
-      getApiUrls({ urlFor: urlType.TV_CREW, id })
-    );
-    const tvRatingAPi = APIInstance.get(
-      getApiUrls({ urlFor: urlType.TV_RATINGS, id })
-    );
-    const data = APIInstance.get(
-      getApiUrls({ urlFor: urlType.SELECTED_MOVIE_TV, type, id, API_KEY })
-    );
-    const watchProviders = APIInstance.get(
-      getApiUrls({ urlFor: urlType.SELECTED_MOVIE_TV_WATCHPROVIDERS, type, id })
-    );
-
-    fetchData({ tvCrewApi, tvRatingAPi, data, watchProviders });
+    getMovieInfoDataAPI({
+      id,
+      type,
+      dispatch,
+    });
   }, [id]);
 
   useEffect(() => {
@@ -52,22 +41,6 @@ const MovieInfo = () => {
       );
     }
   }, [loading]);
-
-  const fetchData = useCallback(
-    async ({ tvCrewApi, tvRatingAPi, data, watchProviders }) => {
-      const pSettled = Promise.allSettled([
-        tvCrewApi,
-        tvRatingAPi,
-        data,
-        watchProviders,
-      ]);
-
-      pSettled.then((res) => {
-        dispatch({ type: "SET_DATA", payload: res });
-      });
-    },
-    []
-  );
 
   return (
     <Container>
