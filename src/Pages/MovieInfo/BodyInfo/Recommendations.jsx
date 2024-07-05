@@ -2,12 +2,10 @@
 import { CardWrapper, RecommendationsWrapper } from "./style";
 import { SpinnerWrapper } from "../../../Components/DisplayArea/SearchArea/style";
 import { CircularProgress } from "@mui/material";
-import { useContentInfo } from "../../../api";
 import DisplayCard from "../../../Components/DisplayCard";
 
 const Recommendations = ({ loading, recommendations, type }) => {
-  const { handleNavigation } = useContentInfo();
-
+  console.log("Recommendations", recommendations);
   return (
     <>
       <RecommendationsWrapper>
@@ -23,11 +21,7 @@ const Recommendations = ({ loading, recommendations, type }) => {
               recommendations?.map((item) => {
                 return (
                   <div key={item.id}>
-                    <DisplayCard
-                      item={item}
-                      handleClick={handleNavigation}
-                      listenerType={type}
-                    />
+                    <DisplayCard item={item} listenerType={type} />
                   </div>
                 );
               })

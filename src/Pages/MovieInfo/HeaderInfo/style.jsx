@@ -76,7 +76,7 @@ export const Content = styled.div`
   padding: 0px;
 
   .image-list-item-bar-img {
-    margin: 10px 10px 0px 0px;
+    margin: 6px 10px 0px 0px;
     width: 40px;
     height: 40px;
   }

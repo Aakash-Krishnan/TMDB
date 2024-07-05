@@ -3,7 +3,7 @@ import { useEffect, useReducer } from "react";
 
 import { CardWrapper, DisplayCardContainer, WholeDiv } from "./style";
 import { CircularProgress } from "@mui/material";
-import { APIInstance, useContentInfo } from "../../api";
+import { APIInstance } from "../../api";
 import { getApiUrls, urlType } from "../../constants";
 import DisplayCard from "../../Components/DisplayCard";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
@@ -24,8 +24,6 @@ const Discover = () => {
   );
   const { data, loading, page, view } = state;
 
-  const { handleNavigation } = useContentInfo();
-
   const { lastElementRef, elementObserver } = useInfiniteLoad();
 
   useEffect(() => {
@@ -33,7 +31,11 @@ const Discover = () => {
   }, [discoverType]);
 
   useEffect(() => {
-    elementObserver({ loading, page, dispatch });
+    elementObserver({
+      loading,
+      page,
+      callBackFn: (res) => dispatch({ type: "SET_PAGE", payload: res }),
+    });
   }, [page, loading]);
 
   useEffect(() => {
@@ -80,11 +82,7 @@ const Discover = () => {
                       key={item.id}
                       ref={idx === data.length - 1 ? lastElementRef : null}
                     >
-                      <DisplayCard
-                        item={item}
-                        handleClick={handleNavigation}
-                        listenerType={"movie"}
-                      />
+                      <DisplayCard item={item} listenerType={"movie"} />
                     </div>
                   );
                 })

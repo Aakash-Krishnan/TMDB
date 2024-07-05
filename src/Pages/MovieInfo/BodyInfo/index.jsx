@@ -34,6 +34,16 @@ const BodyInfo = ({ type, data }) => {
 
   const fetchRecommendations = async () => {
     try {
+      console.log("ID", data.id);
+      console.log(
+        "URL",
+        getApiUrls({
+          urlFor: urlType.RECOMMENDATION,
+          type,
+          id: data.id,
+          page: 1,
+        })
+      );
       const res = await APIInstance.get(
         getApiUrls({
           urlFor: urlType.RECOMMENDATION,
@@ -42,6 +52,7 @@ const BodyInfo = ({ type, data }) => {
           page: 1,
         })
       );
+      console.log(res);
       dispatch({ type: "SET_RECOMMENDATIONS", payload: res.data.results });
     } catch (err) {
       dispatch({ type: "ERROR", payload: err });
@@ -54,6 +65,8 @@ const BodyInfo = ({ type, data }) => {
       dispatch({ type: "SET_VIEW", payload: newView });
     }
   };
+
+  console.log("RECOMMENDATIONS", recommendations);
 
   return (
     <Container>

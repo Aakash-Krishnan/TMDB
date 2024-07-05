@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getApiUrls, searchViews, urlType } from "../../../constants";
-import { APIInstance, useContentInfo } from "../../../api";
+import { APIInstance } from "../../../api";
 import DisplayCard from "../../DisplayCard";
 
 import {
@@ -14,7 +14,6 @@ import { CardWrapper, Container, SpinnerWrapper } from "./style";
 
 const SearchArea = () => {
   const { type, query } = useParams();
-  const { handleNavigation } = useContentInfo();
 
   const lastElementRef = useRef(null);
 
@@ -127,11 +126,7 @@ const SearchArea = () => {
                     key={item.id}
                     ref={idx === item.length - 1 ? lastElementRef : null}
                   >
-                    <DisplayCard
-                      item={item}
-                      handleClick={handleNavigation}
-                      listenerType={view}
-                    />
+                    <DisplayCard item={item} listenerType={view} />
                   </div>
                 );
               })}

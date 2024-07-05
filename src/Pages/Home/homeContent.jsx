@@ -27,8 +27,6 @@ const HomeContentPage = ({
   const [state, dispatch] = useReducer(homeReducer, homeInitialState);
   const { loading, data, specials } = state;
 
-  const { handleNavigation } = useContentInfo();
-
   useEffect(() => {
     dispatch({
       type: "SET_SPECIALS",
@@ -101,11 +99,7 @@ const HomeContentPage = ({
               data.map((item) => {
                 return (
                   <div key={item.id}>
-                    <DisplayCard
-                      item={item}
-                      handleClick={handleNavigation}
-                      listenerType={listenerType}
-                    />
+                    <DisplayCard item={item} listenerType={listenerType} />
                   </div>
                 );
               })

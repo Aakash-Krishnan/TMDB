@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useReducer } from "react";
-import { APIInstance, useContentInfo } from "../../api";
+import { APIInstance } from "../../api";
 import { getApiUrls, urlType } from "../../constants";
 import { useInfiniteLoad } from "../../hooks/useInfiniteLoad";
 
@@ -27,7 +27,6 @@ import { useParams } from "react-router-dom";
 const MyCollectionsList = () => {
   const { listType } = useParams();
 
-  const { handleNavigation } = useContentInfo();
   const { lastElementRef, elementObserver } = useInfiniteLoad();
 
   const [state, dispatch] = useReducer(
@@ -41,7 +40,11 @@ const MyCollectionsList = () => {
   }, [listType]);
 
   useEffect(() => {
-    elementObserver({ loading, page, dispatch });
+    elementObserver({
+      loading,
+      page,
+      callBackFn: (res) => dispatch({ type: "SET_PAGE", payload: res }),
+    });
   }, [page, loading]);
 
   useEffect(() => {
@@ -112,7 +115,6 @@ const MyCollectionsList = () => {
                     >
                       <DisplayCard
                         item={item}
-                        handleClick={handleNavigation}
                         listenerType={view === "movies" ? "movie" : "tv"}
                       />
                     </div>

@@ -3,13 +3,13 @@ import { useRef } from "react";
 export const useInfiniteLoad = () => {
   const lastElementRef = useRef(null);
 
-  const elementObserver = ({ loading, page, dispatch }) => {
+  const elementObserver = ({ loading, page, callBackFn }) => {
     if (loading || page === -1) return;
     const observer = new IntersectionObserver((entries) => {
       const el = entries[0];
       // console.log("ELEMETN", el.isIntersecting);
       if (el && el.isIntersecting) {
-        dispatch({ type: "SET_PAGE", payload: page + 1 });
+        callBackFn(page + 1);
       }
     });
 

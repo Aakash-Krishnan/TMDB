@@ -48,7 +48,10 @@ const HeaderInfo = ({
               <img src={`${IMAGES_BASE_URL}${headerData.poster}`} />
               {watchProvider && (
                 <ImageListItemBar
-                  style={{ cursor: "pointer" }}
+                  style={{
+                    cursor: "pointer",
+                    backgroundColor: "#0d253f",
+                  }}
                   title={watchProvider.provider_name}
                   actionIcon={
                     <img

@@ -14,14 +14,17 @@ import {
   ProgressCircle,
   ProgressLabel,
 } from "./style";
+import { useContentInfo } from "../../api";
 
-const DisplayCard = ({ item, handleClick, listenerType }) => {
+const DisplayCard = ({ item, listenerType }) => {
+  const { handleNavigation } = useContentInfo();
+
   return (
     <div>
       <MoviesCard
         key={item.id}
         onClick={() =>
-          handleClick(
+          handleNavigation(
             item.original_title ?? item.name ?? item.original_name,
             item.id,
             item.media_type ? item.media_type : listenerType
