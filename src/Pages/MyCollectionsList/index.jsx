@@ -21,7 +21,7 @@ import {
   collectionsReducer,
 } from "../../reducers/collectionsReducer";
 import { useParams } from "react-router-dom";
-import { useCollections } from "../../api";
+import { useCollections } from "../../hooks/useCollections";
 
 const MyCollectionsList = () => {
   const { listType } = useParams();

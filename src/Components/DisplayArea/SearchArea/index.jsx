@@ -181,7 +181,7 @@ const SearchArea = () => {
         )}
 
         <div style={{ height: "30px" }} ref={lastElementRef}>
-          LAST
+          {/* LAST */}
         </div>
       </div>
     </Container>
