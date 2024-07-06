@@ -1,7 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useReducer } from "react";
-import { getMyCollectionsAPI } from "../../api";
 import { useInfiniteLoad } from "../../hooks/useInfiniteLoad";
 
 import {
@@ -22,9 +21,12 @@ import {
   collectionsReducer,
 } from "../../reducers/collectionsReducer";
 import { useParams } from "react-router-dom";
+import { useCollections } from "../../api";
 
 const MyCollectionsList = () => {
   const { listType } = useParams();
+
+  const { getMyCollectionsAPI } = useCollections();
 
   const { lastElementRef, elementObserver } = useInfiniteLoad();
 
