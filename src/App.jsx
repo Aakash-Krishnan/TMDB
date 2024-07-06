@@ -16,7 +16,10 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route path="/approved" element={<LoginApproved />} />
+        <Route
+          path="/tmdb-clone-snowy.vercel.app/approved"
+          element={<LoginApproved />}
+        />
         <Route path="/home" element={<HomePage />} />
         <Route path="/info/:type/:id/:name" element={<MovieInfo />} />
         <Route path="/search/:type/:query" element={<SearchArea />} />
