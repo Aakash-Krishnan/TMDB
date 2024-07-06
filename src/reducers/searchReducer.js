@@ -1,3 +1,5 @@
+// NOTE: This code is not in use.
+// TODO: Need to fix the bug before adapting to this code.
 export const searchInitialState = {
   loading: false,
   view: "movie",

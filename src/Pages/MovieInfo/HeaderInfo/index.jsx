@@ -24,9 +24,10 @@ import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 import { ArrowToolTip } from "../../../Components/Tooltip";
-import { setStatusAPI } from "../../../api";
+// import { setStatusAPI, useSetStatus } from "../../../api";
 import { useState } from "react";
 import { watchProviderProcessor } from "../../../utils/dataProcessor";
+import { useSetStatus } from "../../../api";
 
 const HeaderInfo = ({
   headerData,
@@ -36,6 +37,7 @@ const HeaderInfo = ({
   data,
 }) => {
   const [modal, setModal] = useState(false);
+  const { setStatusAPI } = useSetStatus();
 
   const watchProvider = watchProviderProcessor(watchProviders);
 

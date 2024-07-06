@@ -61,7 +61,7 @@ export const getApiUrls = ({
 
 export const navItems = [
   {
-    path: "/",
+    path: "/home",
     title: "Home",
   },
 
@@ -90,10 +90,10 @@ export const navItems = [
   //   path: "/contact",
   //   title: "Contact",
   // },
-  {
-    path: "/sign-in",
-    title: "Sign In",
-  },
+  // {
+  //   path: "/sign-in",
+  //   title: "Sign In",
+  // },
 ];
 
 export const searchViews = [

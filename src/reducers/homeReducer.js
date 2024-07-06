@@ -1,3 +1,4 @@
+// NOTE: This code is not in use. Changed this to redux....
 export const homeInitialState = {
   loading: true,
   data: [],

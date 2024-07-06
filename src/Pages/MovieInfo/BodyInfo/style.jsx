@@ -7,7 +7,7 @@ export const Container = styled.div`
   padding: 10px 50px;
 
   .container-wrapper {
-    width: 75%;
+    width: 100%;
   }
 
   .full-cast {

@@ -13,8 +13,12 @@ import Select from "@mui/material/Select";
 
 import { BackgroundImg, Content } from "./style";
 import { MenuItem } from "@mui/material";
+import { useSelector } from "react-redux";
 
-const SearchBox = ({ images }) => {
+const SearchBox = () => {
+  const specialsData = useSelector((state) => state.home);
+  const { backDropImages } = specialsData;
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [searchType, setSearchType] = useState("movie");
   const navigate = useNavigate();
@@ -28,15 +32,17 @@ const SearchBox = ({ images }) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+      setCurrentImageIndex(
+        (prevIndex) => (prevIndex + 1) % backDropImages.length
+      );
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [backDropImages.length]);
 
   return (
     <BackgroundImg
-      imgurl={`${IMAGES_BASE_URL}${images[currentImageIndex]}`}
+      imgurl={`${IMAGES_BASE_URL}${backDropImages[currentImageIndex]}`}
       className="search-container"
     >
       <Content>

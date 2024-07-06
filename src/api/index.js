@@ -1,6 +1,7 @@
 import axios from "axios";
-import { TOKEN, ACCOUNT_NO, API_KEY } from "../keys";
+import { TOKEN, API_KEY } from "../keys";
 import { getApiUrls, urlType } from "../constants";
+import { useSelector } from "react-redux";
 
 export const APIInstance = axios.create({
   baseURL: "https://api.themoviedb.org/3/",
@@ -19,24 +20,30 @@ export const getStatusAPI = (result, type, id, callBackFn) => {
   });
 };
 
-export const setStatusAPI = (
-  statusFor,
-  id,
-  flag,
-  type,
-  setheaderData,
-  headerData
-) => {
-  const val = flag ? false : true;
-  APIInstance.post(`account/${ACCOUNT_NO}/${statusFor}`, {
-    media_type: type,
-    media_id: id,
-    [statusFor]: val,
-  }).then((res) => {
-    if (res.data.success === true) {
-      setheaderData({ ...headerData, [statusFor]: val });
-    }
-  });
+export const useSetStatus = () => {
+  const { ACCOUNT_NO } = useSelector((state) => state.user);
+
+  const setStatusAPI = (
+    statusFor,
+    id,
+    flag,
+    type,
+    setheaderData,
+    headerData
+  ) => {
+    const val = flag ? false : true;
+    APIInstance.post(`account/${ACCOUNT_NO}/${statusFor}`, {
+      media_type: type,
+      media_id: id,
+      [statusFor]: val,
+    }).then((res) => {
+      if (res.data.success === true) {
+        setheaderData({ ...headerData, [statusFor]: val });
+      }
+    });
+  };
+
+  return { setStatusAPI };
 };
 
 export const getDiscoversAPI = async ({ type, page, dispatch }) => {
@@ -128,7 +135,12 @@ export const getRecommendationsAPI = async ({ id, type, dispatch }) => {
   }
 };
 
-export const getMyCollectionsAPI = async ({ page, view, listType, dispatch }) => {
+export const getMyCollectionsAPI = async ({
+  page,
+  view,
+  listType,
+  dispatch,
+}) => {
   try {
     if (page === -1) {
       return;

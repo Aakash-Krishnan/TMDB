@@ -7,13 +7,17 @@ import HomePage from "./Pages/Home";
 import SearchArea from "./Components/DisplayArea/SearchArea";
 import MyCollectionsList from "./Pages/MyCollectionsList";
 import Discover from "./Pages/Discover";
+import LoginPage from "./Pages/Login";
+import LoginApproved from "./Pages/Login/LoginApproved";
 
 function App() {
   return (
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/approved" element={<LoginApproved />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/info/:type/:id/:name" element={<MovieInfo />} />
         <Route path="/search/:type/:query" element={<SearchArea />} />
         <Route path="/my-list-of/:listType" element={<MyCollectionsList />} />

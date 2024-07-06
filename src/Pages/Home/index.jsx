@@ -1,17 +1,25 @@
+import { useSelector } from "react-redux";
 import SearchBox from "../../Components/Search";
 
 import { queries } from "../../constants";
 import HomeContentPage from "./homeContent";
 import { HomeContainer } from "./style";
-import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const HomePage = () => {
-  const specialsData = useSelector((state) => state.home);
-  const { backDropImages } = specialsData;
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user.request_token === "") {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <HomeContainer>
-      <SearchBox images={backDropImages} />
+      <SearchBox />
 
       {queries.map((query) => {
         return (

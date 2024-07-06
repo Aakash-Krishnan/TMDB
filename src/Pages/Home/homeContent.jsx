@@ -23,7 +23,6 @@ import {
 
 const HomeContentPage = ({ list, getUrl, queryPath, listenerType }) => {
   const specialsData = useSelector((state) => state.home);
-  const { homeData } = specialsData;
 
   const [specials, setSpecials] = useState(
     `${
@@ -31,12 +30,14 @@ const HomeContentPage = ({ list, getUrl, queryPath, listenerType }) => {
     }-${listenerType}`
   );
 
+  const { homeData } = specialsData;
   const { loading, data } = homeData[specials] || {
     loading: true,
     data: [],
     error: null,
   };
 
+  console.log(homeData);
   const reduxDispatch = useDispatch();
 
   useEffect(() => {
@@ -97,7 +98,6 @@ const HomeContentPage = ({ list, getUrl, queryPath, listenerType }) => {
                 <CircularProgress />
               </SpinnerWrapper>
             ) : (
-              data &&
               data.length > 0 &&
               data.map((item) => {
                 return (
