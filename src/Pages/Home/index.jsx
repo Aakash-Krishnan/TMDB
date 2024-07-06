@@ -1,31 +1,22 @@
-import { useState } from "react";
 import SearchBox from "../../Components/Search";
 
 import { queries } from "../../constants";
 import HomeContentPage from "./homeContent";
 import { HomeContainer } from "./style";
+import { useSelector } from "react-redux";
 
 const HomePage = () => {
-  const [images, setImages] = useState([]);
-  const [imageTag, setImageTag] = useState([]);
-
-  const processImages = (data, specials) => {
-    if (imageTag.indexOf(specials) !== -1) return;
-
-    setImageTag((prev) => [...prev, specials]);
-    data.map((item) => {
-      setImages((prev) => [...prev, item.backdrop_path]);
-    });
-  };
+  const specialsData = useSelector((state) => state.home);
+  const { backDropImages } = specialsData;
 
   return (
     <HomeContainer>
-      <SearchBox images={images} />
+      <SearchBox images={backDropImages} />
 
       {queries.map((query) => {
         return (
           <div className="contents" key={query.id}>
-            <HomeContentPage {...query} processImages={processImages} />
+            <HomeContentPage {...query} />
           </div>
         );
       })}

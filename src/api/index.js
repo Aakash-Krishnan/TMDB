@@ -64,7 +64,7 @@ export const getDiscoversAPI = async ({ type, page, dispatch }) => {
   }
 };
 
-export const getDataAndBackDropsAPI = async ({
+export const getHomeDataAndBackDropsAPI = async ({
   queryPath,
   specials,
   getUrl,

@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useReducer } from "react";
 
 import CircularProgress from "@mui/material/CircularProgress";
 
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { getHomeDataAndBackDropsAPI } from "../../api";
 import {
   WholeDiv,
   DisplayCardContainer,
@@ -14,53 +15,46 @@ import {
 } from "./style";
 import DisplayCard from "../../Components/DisplayCard";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
-import { useDispatch, useSelector } from "react-redux";
+import { homeInitialState, homeReducer } from "../../reducers/homeReducer";
+import { useSelector } from "react-redux";
 
-import {
-  setHomeData,
-  getHomeDataAndBackDropsAPIByRedux,
-} from "../../redux/feature/home/homeSlice";
-
-const HomeContentPage = ({ list, getUrl, queryPath, listenerType }) => {
+const HomeContentPage = ({
+  list,
+  getUrl,
+  queryPath,
+  listenerType,
+  processImages,
+}) => {
   const specialsData = useSelector((state) => state.home);
-  const { homeData } = specialsData;
-
-  const [specials, setSpecials] = useState(
-    `${
-      queryPath[0].endPoint !== "" ? queryPath[0].endPoint : queryPath[0].path
-    }-${listenerType}`
-  );
-
-  const { loading, data } = homeData[specials] || {
-    loading: true,
-    data: [],
-    error: null,
-  };
-
-  const reduxDispatch = useDispatch();
+  console.log("REDUX SPECIALS", specialsData);
+  // const dispatch = useDispatch();
+  const [state, dispatch] = useReducer(homeReducer, homeInitialState);
+  const { loading, data, specials } = state;
 
   useEffect(() => {
-    if (!homeData[specials]) {
-      reduxDispatch(setHomeData(specials));
-    }
-  }, [specials]);
+    dispatch({
+      type: "SET_SPECIALS",
+      payload: queryPath[0].endPoint
+        ? queryPath[0].endPoint
+        : queryPath[0].path,
+    });
+  }, [queryPath]);
 
   useEffect(() => {
-    if (specials !== "" && data.length === 0) {
-      reduxDispatch(
-        getHomeDataAndBackDropsAPIByRedux({
-          queryPath,
-          getUrl,
-          specials,
-        })
-      );
-    }
+    dispatch({ type: "LOADING" });
+    getHomeDataAndBackDropsAPI({
+      queryPath,
+      dispatch,
+      specials,
+      getUrl,
+      processImages,
+    });
   }, [specials, getUrl, queryPath]);
 
   const handleChange = useCallback((event, newSpecials) => {
     event.preventDefault();
     if (newSpecials) {
-      setSpecials(`${newSpecials}-${listenerType}`);
+      dispatch({ type: "SET_SPECIALS", payload: newSpecials });
     }
   }, []);
 
@@ -71,7 +65,7 @@ const HomeContentPage = ({ list, getUrl, queryPath, listenerType }) => {
           <h2>{list}</h2>
           <ToggleButtonGroup
             color="secondary"
-            value={specials.split("-")[0]}
+            value={specials}
             exclusive
             onChange={handleChange}
             aria-label="Platform"
@@ -97,8 +91,6 @@ const HomeContentPage = ({ list, getUrl, queryPath, listenerType }) => {
                 <CircularProgress />
               </SpinnerWrapper>
             ) : (
-              data &&
-              data.length > 0 &&
               data.map((item) => {
                 return (
                   <div key={item.id}>

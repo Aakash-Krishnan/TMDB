@@ -10,7 +10,6 @@ export function homeReducer(state, action) {
     case "RESET":
       return {
         ...homeInitialState,
-        loading: true,
       };
     case "LOADING":
       return {
@@ -20,7 +19,6 @@ export function homeReducer(state, action) {
     case "SET_SPECIALS":
       return {
         ...state,
-        loading: true,
         specials: action.payload,
       };
     case "SET_DATA":

@@ -16,53 +16,49 @@ import DisplayCard from "../../Components/DisplayCard";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  setHomeData,
-  getHomeDataAndBackDropsAPIByRedux,
-} from "../../redux/feature/home/homeSlice";
+import { getHomeDataAndBackDropsAPIByRedux } from "../../redux/feature/home/homeSlice";
 
-const HomeContentPage = ({ list, getUrl, queryPath, listenerType }) => {
+const HomeContentPage = ({
+  list,
+  getUrl,
+  queryPath,
+  listenerType,
+  processImages,
+}) => {
   const specialsData = useSelector((state) => state.home);
+  const [loading, setLoading] = useState(true);
   const { homeData } = specialsData;
 
   const [specials, setSpecials] = useState(
-    `${
-      queryPath[0].endPoint !== "" ? queryPath[0].endPoint : queryPath[0].path
-    }-${listenerType}`
+    (queryPath[0].endPoint !== "" ? queryPath[0].endPoint : queryPath[0].path) +
+      "-" +
+      listenerType
   );
-
-  const { loading, data } = homeData[specials] || {
-    loading: true,
-    data: [],
-    error: null,
-  };
 
   const reduxDispatch = useDispatch();
 
   useEffect(() => {
-    if (!homeData[specials]) {
-      reduxDispatch(setHomeData(specials));
-    }
-  }, [specials]);
-
-  useEffect(() => {
-    if (specials !== "" && data.length === 0) {
+    if (specials !== "" && !homeData[specials]) {
+      setLoading(true);
       reduxDispatch(
         getHomeDataAndBackDropsAPIByRedux({
           queryPath,
           getUrl,
+          processImages,
           specials,
         })
       );
+      setLoading(false);
     }
   }, [specials, getUrl, queryPath]);
 
   const handleChange = useCallback((event, newSpecials) => {
     event.preventDefault();
     if (newSpecials) {
-      setSpecials(`${newSpecials}-${listenerType}`);
+      setSpecials(newSpecials + "-" + listenerType);
     }
   }, []);
+
 
   return (
     <WholeDiv>
@@ -97,9 +93,8 @@ const HomeContentPage = ({ list, getUrl, queryPath, listenerType }) => {
                 <CircularProgress />
               </SpinnerWrapper>
             ) : (
-              data &&
-              data.length > 0 &&
-              data.map((item) => {
+              homeData[specials] != null &&
+              homeData[specials].map((item) => {
                 return (
                   <div key={item.id}>
                     <DisplayCard item={item} listenerType={listenerType} />
