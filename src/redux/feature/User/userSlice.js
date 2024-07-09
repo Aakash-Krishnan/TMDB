@@ -7,7 +7,7 @@ export const getApiKeyRequest = createAsyncThunk("user/getApiKey", async () => {
     const {
       data: { request_token },
     } = await APIInstance.get(`authentication/token/new`);
-    window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=http://tmdb-clone-snowy.vercel.app/approved`;
+    window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=https://tmdb-clone-snowy.vercel.app//approved`;
     // window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=http://localhost:5173/approved`;
   } catch (err) {
     return { err };
