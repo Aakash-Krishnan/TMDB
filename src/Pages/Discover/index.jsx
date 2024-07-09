@@ -78,7 +78,21 @@ const Discover = () => {
         )}
       </DisplayCardContainer>
 
-      {<div ref={lastElementRef}>last</div>}
+      {
+        <div
+          style={{
+            cursor: "pointer",
+            padding: "10px",
+            textAlign: "center",
+            backgroundColor: "#0d253f",
+            color: "white",
+          }}
+          ref={lastElementRef}
+          onClick={() => dispatch({ type: "SET_PAGE", payload: page + 1 })}
+        >
+          Load more
+        </div>
+      }
     </WholeDiv>
   );
 };

@@ -27,6 +27,7 @@ import { ArrowToolTip } from "../../../Components/Tooltip";
 import { useState } from "react";
 import { watchProviderProcessor } from "../../../utils/dataProcessor";
 import { useSetStatus } from "../../../hooks/useSetStatus";
+import YouTubeEmbed from "../../../Components/YoutubeEmbeded";
 
 const HeaderInfo = ({
   headerData,

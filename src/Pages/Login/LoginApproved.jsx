@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAccountDetails,
   setApiKey,
-  setApprove,
 } from "../../redux/feature/User/userSlice";
 import { useNavigate } from "react-router-dom";
 import { Button, CircularProgress } from "@mui/material";
@@ -16,7 +15,6 @@ const LoginApproved = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(setApprove(true));
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const request_token = urlParams.get("request_token");

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { APIInstance } from "../../../api";
 
+// TODO: Fix the issue with the Redirecting in build.
 export const getApiKeyRequest = createAsyncThunk("user/getApiKey", async () => {
   try {
     const {
@@ -48,9 +49,26 @@ export const getAccountDetails = createAsyncThunk(
   }
 );
 
+// TODO: Fix the issue with the sign out API.
+export const deleteSession = createAsyncThunk(
+  "user/deleteSession",
+  async (payload, { getState }) => {
+    try {
+      console.log("ERROR", getState().user.sessionId);
+      await APIInstance.delete(`authentication/session`, {
+        session_id: getState().user.sessionId,
+      });
+      localStorage.removeItem("movieToken");
+      return {};
+    } catch (err) {
+      return { err };
+    }
+  }
+);
+
 const initialState = {
   loading: true,
-  aprroved: false,
+  approved: false,
   sessionId: "",
   request_token: "",
   _ACCOUNT_NO: "",
@@ -63,9 +81,6 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
-    setApprove: (state, action) => {
-      state.aprroved = action.payload;
-    },
     setApiKey: (state, action) => {
       state.request_token = action.payload;
     },
@@ -92,6 +107,16 @@ export const userSlice = createSlice({
       const { err } = action.payload;
       state.err = err.response.data.status_message;
       state.loading = false;
+    });
+
+    builder.addCase(deleteSession.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(deleteSession.fulfilled, () => {
+      initialState;
+    });
+    builder.addCase(deleteSession.rejected, (state, action) => {
+      state.error = action.payload.err.response.data.status_message;
     });
   },
 });

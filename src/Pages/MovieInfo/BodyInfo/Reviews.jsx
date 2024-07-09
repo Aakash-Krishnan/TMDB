@@ -38,7 +38,7 @@ const Reviews = ({ data }) => {
                     </div>
 
                     <div className="review-content">
-                      <p>{people.content}</p>
+                      <p className="content">{people.content}</p>
                     </div>
                   </CardContent>
                 </CardActionArea>

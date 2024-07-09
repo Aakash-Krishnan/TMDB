@@ -123,12 +123,14 @@ export const ReviewsWrapper = styled.div`
 
       .author-content {
         display: flex;
+        width: 100%;
+
         gap: 10px;
         align-items: center;
 
         .author-image {
-          width: 60px;
-          height: 60px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
         }
 
@@ -136,8 +138,8 @@ export const ReviewsWrapper = styled.div`
           font-size: 28px;
           background-color: indigo;
           color: white;
-          width: 50px;
-          height: 50px;
+          width: 40px;
+          height: 40px;
           display: flex;
           border-radius: 50%;
           justify-content: center;
@@ -149,11 +151,11 @@ export const ReviewsWrapper = styled.div`
           flex-direction: column;
 
           .reviewer-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 600;
 
             .posted-details {
-              font-size: 16px;
+              font-size: 14px;
               font-weight: 400;
               color: grey;
 
@@ -167,7 +169,10 @@ export const ReviewsWrapper = styled.div`
       }
       .review-content {
         margin-top: 30px;
-        font-size: 16px;
+        font-size: 14px;
+        .content {
+          font-family: cursive ;
+        }
       }
     }
   }

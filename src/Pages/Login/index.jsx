@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getApiKeyRequest,
-  setApprove,
 } from "../../redux/feature/User/userSlice";
 
 const LoginPage = () => {
@@ -14,8 +13,6 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (localStorage.getItem("movieToken") !== null) {
-      dispatch(setApprove(true));
-
       console.log("NAVIGATING TO HOME");
       navigate("/home");
     } else {

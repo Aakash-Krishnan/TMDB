@@ -144,7 +144,9 @@ const SearchArea = () => {
                 >
                   <p>
                     {item.title}{" "}
-                    {!loading && view === item.view && totalResults}
+                    {searchData.length > 0 &&
+                      view === item.view &&
+                      totalResults}
                   </p>
                 </ToggleButton>
               );
@@ -160,10 +162,7 @@ const SearchArea = () => {
             <CardWrapper>
               {searchData.map((item) => {
                 return (
-                  <div
-                    key={item.id}
-                    // ref={idx === item.length - 1 ? lastElementRef : null}
-                  >
+                  <div key={item.id}>
                     <DisplayCard item={item} listenerType={view} />
                   </div>
                 );
@@ -180,9 +179,7 @@ const SearchArea = () => {
           </SpinnerWrapper>
         )}
 
-        <div style={{ height: "30px" }} ref={lastElementRef}>
-          {/* LAST */}
-        </div>
+        <div style={{ height: "30px" }} ref={lastElementRef}></div>
       </div>
     </Container>
   );
