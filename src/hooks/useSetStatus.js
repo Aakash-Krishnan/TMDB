@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { APIInstance } from "../api";
 
 export const useSetStatus = () => {
-  const { ACCOUNT_NO } = useSelector((state) => state.user);
+  const { _ACCOUNT_NO } = useSelector((state) => state.user);
 
   const setStatusAPI = (
     statusFor,
@@ -13,7 +13,7 @@ export const useSetStatus = () => {
     headerData
   ) => {
     const val = flag ? false : true;
-    APIInstance.post(`account/${ACCOUNT_NO}/${statusFor}`, {
+    APIInstance.post(`account/${_ACCOUNT_NO}/${statusFor}`, {
       media_type: type,
       media_id: id,
       [statusFor]: val,

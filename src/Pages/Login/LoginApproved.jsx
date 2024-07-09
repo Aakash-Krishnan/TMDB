@@ -5,9 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getAccountDetails,
   setApiKey,
+  setApprove,
 } from "../../redux/feature/User/userSlice";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 
 const LoginApproved = () => {
   const userState = useSelector((state) => state.user);
@@ -15,18 +16,20 @@ const LoginApproved = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    dispatch(setApprove(true));
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const request_token = urlParams.get("request_token");
     dispatch(setApiKey(request_token));
+
+    dispatch(getAccountDetails());
   }, []);
 
-  useEffect(() => {
-    console.log("USER,", userState);
-    if (userState.ACCOUNT_NO !== "") {
+  const handleNavigation = () => {
+    if (userState._ACCOUNT_NO !== "") {
       navigate("/home");
     }
-  }, [userState]);
+  };
 
   return (
     <div
@@ -50,9 +53,10 @@ const LoginApproved = () => {
       <Button
         style={{ fontSize: "20px", borderRadius: "8px" }}
         variant="contained"
-        onClick={() => dispatch(getAccountDetails())}
+        disabled={userState._ACCOUNT_NO === "" ? true : false}
+        onClick={handleNavigation}
       >
-        Surf in
+        {userState._ACCOUNT_NO === "" ? <CircularProgress /> : "Surf in"}
       </Button>
     </div>
   );

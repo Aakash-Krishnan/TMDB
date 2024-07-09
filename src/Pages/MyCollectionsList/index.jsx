@@ -22,9 +22,14 @@ import {
 } from "../../reducers/collectionsReducer";
 import { useParams } from "react-router-dom";
 import { useCollections } from "../../hooks/useCollections";
+import { useSelector } from "react-redux";
+import useAuth from "../../hooks/useAuth";
 
 const MyCollectionsList = () => {
+  useAuth();
+
   const { listType } = useParams();
+  const { userName } = useSelector((state) => state.user);
 
   const { getMyCollectionsAPI } = useCollections();
 
@@ -51,7 +56,7 @@ const MyCollectionsList = () => {
   useEffect(() => {
     dispatch({ type: "LOADING" });
     getMyCollectionsAPI({ page, view, listType, dispatch });
-  }, [listType, view, page]);
+  }, [listType, view, page, userName]);
 
   const handleChange = (event, newView) => {
     event.preventDefault();
@@ -81,29 +86,30 @@ const MyCollectionsList = () => {
 
         <div>
           <CardWrapper>
-            {data.length > 0
-              ? data.map((item, idx) => {
-                  return (
-                    <div
-                      key={item.id}
-                      ref={idx === data.length - 1 ? lastElementRef : null}
-                    >
-                      <DisplayCard
-                        item={item}
-                        listenerType={view === "movies" ? "movie" : "tv"}
-                      />
-                    </div>
-                  );
-                })
-              : !loading && (
-                  <h1 style={{ marginTop: "20px" }}>No data found</h1>
-                )}
+            {data.length > 0 &&
+              data.map((item, idx) => {
+                return (
+                  <div
+                    key={item.id}
+                    ref={idx === data.length - 1 ? lastElementRef : null}
+                  >
+                    <DisplayCard
+                      item={item}
+                      listenerType={view === "movies" ? "movie" : "tv"}
+                    />
+                  </div>
+                );
+              })}
           </CardWrapper>
         </div>
-        {loading && (
-          <SpinnerWrapper>
-            <CircularProgress />
-          </SpinnerWrapper>
+        {!userName ||
+          (loading && (
+            <SpinnerWrapper>
+              <CircularProgress />
+            </SpinnerWrapper>
+          ))}
+        {userName && !loading && data.length === 0 && (
+          <h1 style={{ marginTop: "20px" }}>No data found</h1>
         )}
       </DisplayCardContainer>
     </WholeDiv>

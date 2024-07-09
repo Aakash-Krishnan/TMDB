@@ -6,8 +6,8 @@ export const getApiKeyRequest = createAsyncThunk("user/getApiKey", async () => {
     const {
       data: { request_token },
     } = await APIInstance.get(`authentication/token/new`);
-    window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=http://tmdb-clone-snowy.vercel.app/approved`;
-    // window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=http://localhost:5173/approved`;
+    // window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=http://tmdb-clone-snowy.vercel.app/approved`;
+    window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=http://localhost:5173/approved`;
   } catch (err) {
     return { err };
   }
@@ -27,7 +27,16 @@ export const getAccountDetails = createAsyncThunk(
         `account?api_key=${request_token}&session_id=${sessionId.data.session_id}`
       );
 
-      console.log("ACC DETAILS: ", accDetails.data);
+      localStorage.setItem(
+        "movieToken",
+        JSON.stringify({
+          timestamp: Date.now(),
+          reqToken: request_token,
+          sId: sessionId.data.session_id,
+          accDetails: accDetails.data,
+        })
+      );
+
       return {
         sId: sessionId.data.session_id,
         accNo: accDetails.data.id,
@@ -41,9 +50,10 @@ export const getAccountDetails = createAsyncThunk(
 
 const initialState = {
   loading: true,
+  aprroved: false,
   sessionId: "",
   request_token: "",
-  ACCOUNT_NO: "",
+  _ACCOUNT_NO: "",
   userName: "",
   error: null,
 };
@@ -53,8 +63,18 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     reset: () => initialState,
+    setApprove: (state, action) => {
+      state.aprroved = action.payload;
+    },
     setApiKey: (state, action) => {
       state.request_token = action.payload;
+    },
+    setAccDetails: (state, action) => {
+      const { sId, accNo, userName } = action.payload;
+      state._ACCOUNT_NO = accNo;
+      state.sessionId = sId;
+      state.userName = userName;
+      state.loading = false;
     },
   },
   extraReducers: (builder) => {
@@ -63,7 +83,7 @@ export const userSlice = createSlice({
     });
     builder.addCase(getAccountDetails.fulfilled, (state, action) => {
       const { sId, accNo, userName } = action.payload;
-      state.ACCOUNT_NO = accNo;
+      state._ACCOUNT_NO = accNo;
       state.sessionId = sId;
       state.userName = userName;
       state.loading = false;
@@ -76,5 +96,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { reset, setApiKey } = userSlice.actions;
+export const { reset, setApprove, setApiKey, setAccDetails } =
+  userSlice.actions;
 export default userSlice.reducer;

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useReducer } from "react";
 import { useParams } from "react-router";
@@ -14,8 +15,11 @@ import {
   infoInitialState,
   informationReducer,
 } from "../../reducers/informationReducer";
+import useAuth from "../../hooks/useAuth";
 
 const MovieInfo = () => {
+  useAuth();
+
   const { type, id } = useParams();
 
   const [state, dispatch] = useReducer(informationReducer, infoInitialState);

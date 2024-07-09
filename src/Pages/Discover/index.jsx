@@ -1,4 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-refresh/only-export-components */
+// /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useReducer } from "react";
 
 import { CardWrapper, DisplayCardContainer, WholeDiv } from "./style";
@@ -12,8 +13,10 @@ import {
   collectionsInitialState,
   collectionsReducer,
 } from "../../reducers/collectionsReducer";
+import useAuth from "../../hooks/useAuth.js";
 
 const Discover = () => {
+  useAuth();
   const { discoverType } = useParams();
   const type = discoverType.split("-")[0];
 
@@ -21,25 +24,31 @@ const Discover = () => {
     collectionsReducer,
     collectionsInitialState
   );
-  const { data, loading, page, view } = state;
+  const { data, loading, page } = state;
 
   const { lastElementRef, elementObserver } = useInfiniteLoad();
 
   useEffect(() => {
-    dispatch({ type: "RESET", action: view });
-  }, [discoverType]);
+    dispatch({ type: "RESET", action: type });
+  }, [type]);
 
+  // TODO: Fix the issue with the infinite scroll
   useEffect(() => {
     elementObserver({
       loading,
       page,
-      callBackFn: (res) => dispatch({ type: "SET_PAGE", payload: res }),
+      callBackFn: (res) => {
+        console.log("CALLBACK", res);
+        dispatch({ type: "SET_PAGE", payload: res });
+      },
     });
   }, [page, loading]);
 
   useEffect(() => {
-    dispatch({ type: "LOADING" });
-    getDiscoversAPI({ type, page, dispatch });
+    if (!loading) {
+      dispatch({ type: "LOADING" });
+      getDiscoversAPI({ type, page, dispatch });
+    }
   }, [discoverType, page]);
 
   return (
@@ -50,12 +59,9 @@ const Discover = () => {
         <div>
           <CardWrapper>
             {data.length > 0
-              ? data.map((item, idx) => {
+              ? data.map((item) => {
                   return (
-                    <div
-                      key={item.id}
-                      ref={idx === data.length - 1 ? lastElementRef : null}
-                    >
+                    <div key={item.id}>
                       <DisplayCard item={item} listenerType={"movie"} />
                     </div>
                   );
@@ -72,7 +78,7 @@ const Discover = () => {
         )}
       </DisplayCardContainer>
 
-      {/* {<div ref={lastElementRef}></div>} */}
+      {<div ref={lastElementRef}>last</div>}
     </WholeDiv>
   );
 };

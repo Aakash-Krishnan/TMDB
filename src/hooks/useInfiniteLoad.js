@@ -4,10 +4,10 @@ export const useInfiniteLoad = () => {
   const lastElementRef = useRef(null);
 
   const elementObserver = ({ loading, page, callBackFn }) => {
-    if (loading || page === -1) return;
+    if (loading === true || page === -1) return;
     const observer = new IntersectionObserver((entries) => {
       const el = entries[0];
-      // console.log("ELEMETN", el.isIntersecting);
+      // console.log("ELEMETN", el.isIntersecting, page);
       if (el && el.isIntersecting) {
         callBackFn(page + 1);
       }

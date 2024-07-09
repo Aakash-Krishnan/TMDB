@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from "uuid";
-// import { ACCOUNT_NO } from "./keys";
 
 export const TMDB_LOGO =
   "https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg";
@@ -31,7 +30,7 @@ export const getApiUrls = ({
   API_KEY,
   endPoint,
   path,
-  ACCOUNT_NO,
+  _ACCOUNT_NO,
   page = 1,
 }) => {
   switch (urlFor) {
@@ -42,7 +41,7 @@ export const getApiUrls = ({
     case urlType.TV_RATINGS:
       return `/tv/${id}/content_ratings`;
     case urlType.WATCHLISTS_FAVORITES:
-      return `account/${ACCOUNT_NO}/${getFor}/${type}?language=en-US&page=${page}&sort_by=created_at.asc`;
+      return `account/${_ACCOUNT_NO}/${getFor}/${type}?language=en-US&page=${page}&sort_by=created_at.asc`;
     case urlType.SELECTED_MOVIE_TV:
       return `${type}/${id}?api_key=${API_KEY}/content_ratings&append_to_response=credits,videos,images,release_dates,reviews`;
     case urlType.SELECTED_MOVIE_TV_WATCHPROVIDERS:

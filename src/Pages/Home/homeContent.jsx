@@ -37,7 +37,6 @@ const HomeContentPage = ({ list, getUrl, queryPath, listenerType }) => {
     error: null,
   };
 
-  console.log(homeData);
   const reduxDispatch = useDispatch();
 
   useEffect(() => {
