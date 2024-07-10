@@ -1,0 +1,3 @@
+{
+  "rewrites": [{ "source": "/approved", "destination": "/index.html" }]
+}
