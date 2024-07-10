@@ -19,31 +19,6 @@ export const getStatusAPI = (result, type, id, callBackFn) => {
   });
 };
 
-export const getDiscoversAPI = async ({ type, page, dispatch }) => {
-  try {
-    if (page === -1) {
-      return;
-    }
-    const res = await APIInstance(
-      getApiUrls({
-        urlFor: urlType.DISCOVER_MOVIES_SERIES,
-        type,
-        page,
-      })
-    );
-    if (res.data.results.length === 0) {
-      dispatch({ type: "SET_PAGE", payload: -1 });
-      return;
-    }
-    dispatch({ type: "SET_DATA", payload: res.data.results });
-  } catch (err) {
-    console.error(err);
-    dispatch({ type: "ERROR", payload: err });
-  } finally {
-    dispatch({ type: "SETTLED" });
-  }
-};
-
 export const getHomeDataAndBackDropsAPI = async ({
   queryPath,
   specials,

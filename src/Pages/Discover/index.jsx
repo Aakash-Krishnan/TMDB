@@ -1,55 +1,54 @@
 /* eslint-disable react-refresh/only-export-components */
 // /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useReducer } from "react";
+import { useEffect } from "react";
 
 import { CardWrapper, DisplayCardContainer, WholeDiv } from "./style";
 import { CircularProgress } from "@mui/material";
-import { getDiscoversAPI } from "../../api";
 import DisplayCard from "../../Components/DisplayCard";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
 import { useInfiniteLoad } from "../../hooks/useInfiniteLoad";
 import { useParams } from "react-router-dom";
-import {
-  collectionsInitialState,
-  collectionsReducer,
-} from "../../reducers/collectionsReducer";
+
 import useAuth from "../../hooks/useAuth.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getDiscoversAPI,
+  reset,
+  setLoading,
+  setPage,
+} from "../../redux/feature/Discover/discoverSlice.js";
 
 const Discover = () => {
   useAuth();
+
   const { discoverType } = useParams();
   const type = discoverType.split("-")[0];
-
-  const [state, dispatch] = useReducer(
-    collectionsReducer,
-    collectionsInitialState
-  );
-  const { data, loading, page } = state;
+  const dispatch = useDispatch();
+  const discoverData = useSelector((state) => state.discover);
+  const { data, loading, page, view } = discoverData;
 
   const { lastElementRef, elementObserver } = useInfiniteLoad();
 
   useEffect(() => {
-    dispatch({ type: "RESET", action: type });
+    dispatch(reset(type));
   }, [type]);
 
   // TODO: Fix the issue with the infinite scroll
-  useEffect(() => {
-    elementObserver({
-      loading,
-      page,
-      callBackFn: (res) => {
-        console.log("CALLBACK", res);
-        dispatch({ type: "SET_PAGE", payload: res });
-      },
-    });
-  }, [page, loading]);
+  // useEffect(() => {
+  //   elementObserver({
+  //     loading,
+  //     page,
+  //     callBackFn: (res) => {
+  //       console.log("CALLBACK", res);
+  //       dispatch({ type: "SET_PAGE", payload: res });
+  //     },
+  //   });
+  // }, [page, loading]);
 
   useEffect(() => {
-    if (!loading) {
-      dispatch({ type: "LOADING" });
-      getDiscoversAPI({ type, page, dispatch });
-    }
-  }, [discoverType, page]);
+    dispatch(setLoading());
+    dispatch(getDiscoversAPI({ type, page }));
+  }, [type, page]);
 
   return (
     <WholeDiv>
@@ -62,7 +61,7 @@ const Discover = () => {
               ? data.map((item) => {
                   return (
                     <div key={item.id}>
-                      <DisplayCard item={item} listenerType={"movie"} />
+                      <DisplayCard item={item} listenerType={view} />
                     </div>
                   );
                 })
@@ -78,7 +77,7 @@ const Discover = () => {
         )}
       </DisplayCardContainer>
 
-      {
+      {page !== -1 && (
         <div
           style={{
             cursor: "pointer",
@@ -88,11 +87,12 @@ const Discover = () => {
             color: "white",
           }}
           ref={lastElementRef}
-          onClick={() => dispatch({ type: "SET_PAGE", payload: page + 1 })}
+          // onClick={() => dispatch({ type: "SET_PAGE", payload: page + 1 })}
+          onClick={() => dispatch(setPage(page + 1))}
         >
           Load more
         </div>
-      }
+      )}
     </WholeDiv>
   );
 };
