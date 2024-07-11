@@ -1,14 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { APIInstance } from "../../../api";
 
+const REDIRECT_URL = import.meta.env.VITE_API_URL;
+
 // TODO: Fix the issue with the Redirecting in build.
 export const getApiKeyRequest = createAsyncThunk("user/getApiKey", async () => {
   try {
     const {
       data: { request_token },
     } = await APIInstance.get(`authentication/token/new`);
-    window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=https://tmdb-clone-snowy.vercel.app/approved`;
-    // window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=http://localhost:5173/approved`;
+    window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=${REDIRECT_URL}/approved`;
   } catch (err) {
     return { err };
   }
