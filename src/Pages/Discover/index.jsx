@@ -77,7 +77,7 @@ const Discover = () => {
         )}
       </DisplayCardContainer>
 
-      {page !== -1 && (
+      {page !== -1 && !loading && (
         <div
           style={{
             cursor: "pointer",
@@ -87,7 +87,6 @@ const Discover = () => {
             color: "white",
           }}
           ref={lastElementRef}
-          // onClick={() => dispatch({ type: "SET_PAGE", payload: page + 1 })}
           onClick={() => dispatch(setPage(page + 1))}
         >
           Load more
