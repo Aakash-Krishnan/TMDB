@@ -27,7 +27,7 @@ const Discover = () => {
   const discoverData = useSelector((state) => state.discover);
   const { data, loading, page, view } = discoverData;
 
-  const { lastElementRef, elementObserver } = useInfiniteLoad();
+  // const { lastElementRef, elementObserver } = useInfiniteLoad();
 
   useEffect(() => {
     dispatch(reset(type));
@@ -86,7 +86,7 @@ const Discover = () => {
             backgroundColor: "#0d253f",
             color: "white",
           }}
-          ref={lastElementRef}
+          // ref={lastElementRef}
           onClick={() => dispatch(setPage(page + 1))}
         >
           Load more
