@@ -20,12 +20,12 @@ export const getAccountDetails = createAsyncThunk(
     try {
       const { request_token } = getState().user;
       console.log(request_token);
-      const sessionId = await APIInstance.post(`authentication/session/new`, {
+      const _sessionId = await APIInstance.post(`authentication/session/new`, {
         request_token: request_token,
       });
 
       const accDetails = await APIInstance.get(
-        `account?api_key=${request_token}&session_id=${sessionId.data.session_id}`
+        `account?api_key=${request_token}&session_id=${_sessionId.data.session_id}`
       );
 
       localStorage.setItem(
@@ -33,13 +33,13 @@ export const getAccountDetails = createAsyncThunk(
         JSON.stringify({
           timestamp: Date.now(),
           reqToken: request_token,
-          sId: sessionId.data.session_id,
+          sId: _sessionId.data.session_id,
           accDetails: accDetails.data,
         })
       );
 
       return {
-        sId: sessionId.data.session_id,
+        sId: _sessionId.data.session_id,
         accNo: accDetails.data.id,
         userName: accDetails.data.username,
       };
@@ -54,9 +54,9 @@ export const deleteSession = createAsyncThunk(
   "user/deleteSession",
   async (payload, { getState }) => {
     try {
-      console.log("ERROR", getState().user.sessionId);
+      console.log("ERROR", getState().user._sessionId);
       await APIInstance.delete(`authentication/session`, {
-        session_id: getState().user.sessionId,
+        session_id: getState().user._sessionId,
       });
       localStorage.removeItem("movieToken");
       return {};
@@ -69,7 +69,7 @@ export const deleteSession = createAsyncThunk(
 const initialState = {
   loading: true,
   approved: false,
-  sessionId: "",
+  _sessionId: "",
   request_token: "",
   _ACCOUNT_NO: "",
   userName: "",
@@ -87,7 +87,7 @@ export const userSlice = createSlice({
     setAccDetails: (state, action) => {
       const { sId, accNo, userName } = action.payload;
       state._ACCOUNT_NO = accNo;
-      state.sessionId = sId;
+      state._sessionId = sId;
       state.userName = userName;
       state.loading = false;
     },
@@ -99,7 +99,7 @@ export const userSlice = createSlice({
     builder.addCase(getAccountDetails.fulfilled, (state, action) => {
       const { sId, accNo, userName } = action.payload;
       state._ACCOUNT_NO = accNo;
-      state.sessionId = sId;
+      state._sessionId = sId;
       state.userName = userName;
       state.loading = false;
     });

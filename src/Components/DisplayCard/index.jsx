@@ -16,7 +16,6 @@ import {
 } from "./style";
 import { useContentInfo } from "../../hooks/useContentInfo";
 
-
 const DisplayCard = ({ item, listenerType }) => {
   const { handleNavigation } = useContentInfo();
 
@@ -37,7 +36,7 @@ const DisplayCard = ({ item, listenerType }) => {
             style={{ borderRadius: "16px" }}
             component="img"
             height="200"
-            image={`${IMAGES_BASE_URL}${item.poster_path}`}
+            image={`${IMAGES_BASE_URL}${item.poster_path ?? item.profile_path}`}
             alt="green iguana"
           />
           {item.vote_average && (

@@ -11,6 +11,11 @@ export const searchInitialState = {
 
 export function searchReducer(state, action) {
   switch (action.type) {
+    case "RESET":
+      return {
+        ...searchInitialState,
+        view: action.payload
+      }
     case "LOADING":
       return {
         ...state,
