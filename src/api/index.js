@@ -1,11 +1,13 @@
 import axios from "axios";
-import { TOKEN, API_KEY } from "../keys";
 import { getApiUrls, urlType } from "../constants";
+
+const apiKey = import.meta.env.VITE_API_KEY;
+const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
 
 export const APIInstance = axios.create({
   baseURL: "https://api.themoviedb.org/3/",
   headers: {
-    Authorization: `Bearer ${TOKEN}`,
+    Authorization: `Bearer ${accessToken}`,
   },
   responseType: "json",
 });
@@ -48,7 +50,7 @@ export const getMovieInfoDataAPI = async ({ id, type, dispatch }) => {
     getApiUrls({ urlFor: urlType.TV_RATINGS, id })
   );
   const data = APIInstance.get(
-    getApiUrls({ urlFor: urlType.SELECTED_MOVIE_TV, type, id, API_KEY })
+    getApiUrls({ urlFor: urlType.SELECTED_MOVIE_TV, type, id, apiKey })
   );
   const watchProviders = APIInstance.get(
     getApiUrls({ urlFor: urlType.SELECTED_MOVIE_TV_WATCHPROVIDERS, type, id })
