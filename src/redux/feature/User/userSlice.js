@@ -33,12 +33,16 @@ export const getAccountDetails = createAsyncThunk(
 
       localStorage.setItem(
         "movieToken",
-        JSON.stringify({
-          timestamp: Date.now(),
-          reqToken: request_token,
-          sId: _sessionId.data.session_id,
-          accDetails: accDetails.data,
-        })
+        JSON.stringify(
+          {
+            timestamp: Date.now(),
+            reqToken: request_token,
+            sId: _sessionId.data.session_id,
+            accDetails: accDetails.data,
+          },
+          null,
+          2
+        )
       );
 
       return {
