@@ -1,6 +1,7 @@
 import axios from "axios";
 import { getApiUrls, urlType } from "../constants";
 
+//NOTE: to run this in local environment, you need to create a .env file in the root directory and add your keys and token.
 const apiKey = import.meta.env.VITE_API_KEY;
 const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
 
@@ -82,5 +83,40 @@ export const getRecommendationsAPI = async ({ id, type, dispatch }) => {
   } catch (err) {
     dispatch({ type: "ERROR", payload: err });
     console.log("ERROR ON RECOMMENDATIONS", err);
+  }
+};
+
+export const getSearchDatasAPI = async ({
+  page,
+  view,
+  query,
+  searchData,
+  dispatch,
+}) => {
+  try {
+    if (page === -1) {
+      return;
+    }
+    const data = await APIInstance.get(
+      getApiUrls({ urlFor: urlType.SEARCH, type: view, query, page })
+    );
+    const res = await data.data;
+
+    if (res.results.length === 0 && searchData.length === 0) {
+      throw new Error("No results found");
+    }
+    if (res.results.length === 0) {
+      dispatch({ type: "SET_PAGE", payload: -1 });
+      return;
+    }
+
+    dispatch({
+      type: "SET_DATA",
+      payload: { res: res.results, totalResults: res.total_results },
+    });
+  } catch (err) {
+    dispatch({ type: "ERROR" });
+  } finally {
+    dispatch({ type: "SETTLED" });
   }
 };

@@ -1,5 +1,3 @@
-// NOTE: This code is not in use.
-// TODO: Need to fix the bug before adapting to this code.
 export const searchInitialState = {
   loading: false,
   view: "movie",
@@ -14,8 +12,8 @@ export function searchReducer(state, action) {
     case "RESET":
       return {
         ...searchInitialState,
-        view: action.payload
-      }
+        view: action.payload,
+      };
     case "LOADING":
       return {
         ...state,
@@ -38,7 +36,6 @@ export function searchReducer(state, action) {
       };
 
     case "SET_DATA":
-      console.log("REDUCER", state.searchData, action.payload.res);
       return {
         ...state,
         searchData: [...state.searchData, ...action.payload.res],

@@ -57,4 +57,22 @@ export const Container = styled.div`
   .nav-items a.nav-link-active {
     color: rgb(20, 164, 193);
   }
+
+  .userName-btn {
+    background: inherit;
+    border: none;
+    outline: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .sign-out-button {
+    border: none;
+    outline: none;
+    background: inherit;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
 `;

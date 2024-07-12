@@ -1,6 +1,6 @@
-/* eslint-disable react/prop-types */
 import { DividerWrapper, LatestSeasonDiv } from "./style";
 import { Box, Card, CardContent, CardMedia, Divider } from "@mui/material";
+
 import { IMAGES_BASE_URL } from "../../../constants";
 import moment from "moment";
 

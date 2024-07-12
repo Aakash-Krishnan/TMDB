@@ -200,14 +200,18 @@ export const Content = styled.div`
           font-size: 20px;
         }
       }
+      .play-trailer-wrapper {
+        .play-icon {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
 
-      .play-icon {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-
-        :first-child {
-          font-size: 30px;
+          :first-child {
+            font-size: 30px;
+          }
+        }
+        :hover {
+          opacity: 0.8;
         }
       }
     }

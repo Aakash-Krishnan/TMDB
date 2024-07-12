@@ -1,29 +1,29 @@
+import { useEffect } from "react";
 import { Routes, Route } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 
+//$ reducers
+import { setAccDetails } from "./redux/feature/User/userSlice";
+
+//$ components & pages
+import HomePage from "./Pages/Home";
+import LoginPage from "./Pages/Login";
+import Discover from "./Pages/Discover";
 import Navbar from "./Components/navBar";
 import MovieInfo from "./Pages/MovieInfo/movieInfo";
-import HomePage from "./Pages/Home";
-import SearchArea from "./Components/DisplayArea/SearchArea";
-import MyCollectionsList from "./Pages/MyCollectionsList";
-import Discover from "./Pages/Discover";
-import LoginPage from "./Pages/Login";
 import LoginApproved from "./Pages/Login/LoginApproved";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setAccDetails } from "./redux/feature/User/userSlice";
+import MyCollectionsList from "./Pages/MyCollectionsList";
+import SearchArea from "./Components/DisplayArea/SearchArea";
 
 function App() {
   const dispatch = useDispatch();
   const { approved } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (localStorage.getItem("movieToken") !== null) {
-      console.log("NAVIGATING TO HOME");
-
+    if (localStorage.getItem("movieToken")) {
       const { sId, accDetails } = JSON.parse(
         localStorage.getItem("movieToken")
       );
-      console.log(sId, accDetails);
       dispatch(
         setAccDetails({
           sId: sId,

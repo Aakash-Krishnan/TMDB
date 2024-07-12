@@ -1,95 +1,75 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getApiUrls, searchViews, urlType } from "../../../constants";
-import { APIInstance } from "../../../api";
-import DisplayCard from "../../DisplayCard";
+import { useCallback, useEffect, useReducer } from "react";
 
+//$ custom hooks
+import useAuth from "../../../hooks/useAuth";
+import { useInfiniteLoad } from "../../../hooks/useInfiniteLoad";
+
+//$ styles
+import { CardWrapper, Container, SpinnerWrapper } from "./style";
 import {
   CircularProgress,
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
-import { CardWrapper, Container, SpinnerWrapper } from "./style";
 
-import useAuth from "../../../hooks/useAuth";
+//$ reducers
+import {
+  searchReducer,
+  searchInitialState,
+} from "../../../reducers/searchReducer";
+
+//$ constants & components
+import DisplayCard from "../../DisplayCard";
+import { getSearchDatasAPI } from "../../../api";
+import { searchViews } from "../../../constants";
 
 const SearchArea = () => {
+  //* custom hook to verify user authentication.
   useAuth();
 
+  //* get the type:{movie/tv} and query:{your searched query} from the url.
   const { type, query } = useParams();
 
-  const lastElementRef = useRef(null);
+  //* custom hook to handle infinite scrolling.
+  const { lastElementRef, elementObserver } = useInfiniteLoad();
 
-  const [error, setError] = useState(false);
-  const [page, setPage] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
-  const [view, setView] = useState(type);
-  const [searchData, setSearchData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  //* useReducers to handle the state of the search area.
+  const [state, dispatch] = useReducer(searchReducer, searchInitialState);
+  const { loading, view, totalResults, page, searchData, error } = state;
 
-  console.log(searchData);
-
-  useEffect(() => {}, []);
-
-  const handleChange = (event, nextView) => {
-    if (nextView) {
-      setLoading(true);
-      setError(false);
-      setPage(1);
-      setSearchData([]);
-      setView(nextView);
-    }
-  };
-
+  //* When ever the type:{move/tv} changes, this will reset the state.
   useEffect(() => {
-    if (loading || page === -1) return;
-    const observer = new IntersectionObserver((entries) => {
-      const el = entries[0];
-      if (el && el.isIntersecting) {
-        setPage((prev) => prev + 1);
-      }
+    dispatch({ type: "SET_VIEW", payload: type });
+  }, [type]);
+
+  //* To handle the infinite scrolling.
+  useEffect(() => {
+    const cleanupObserver = elementObserver({
+      loading,
+      page,
+      callBackFn: (res) => dispatch({ type: "SET_PAGE", payload: res }),
     });
 
-    if (lastElementRef.current) observer.observe(lastElementRef.current);
-
     return () => {
-      if (lastElementRef.current) observer.disconnect(lastElementRef.current);
+      if (cleanupObserver) cleanupObserver();
     };
   }, [page, loading]);
 
-  // NOTE: Need help
+  //* when ever the page/view/query changes, this will fetch the data from the api.
   useEffect(() => {
-    setLoading(true);
-    fetchData();
-  }, [view, page]);
-
-  const fetchData = async () => {
-    try {
-      if (page === -1) {
-        return;
-      }
-      const data = await APIInstance.get(
-        getApiUrls({ urlFor: urlType.SEARCH, type: view, query, page })
-      );
-      const res = await data.data;
-      if (res.results.length === 0 && searchData.length === 0) {
-        throw new Error("No results found");
-      }
-      if (res.results.length === 0) {
-        setPage(-1);
-        return;
-      }
-      setTotalResults(res.total_results);
-      setSearchData((prev) => [...prev, ...res.results]);
-    } catch (err) {
-      setTotalResults(0);
-      setPage(-1);
-      setError(true);
-    } finally {
-      setLoading(false);
+    if (page !== -1) {
+      dispatch({ type: "LOADING" });
+      getSearchDatasAPI({ page, view, query, searchData, dispatch });
     }
-  };
+  }, [view, page, query]);
+
+  //* to handle the view change.
+  const handleChange = useCallback((_, nextView) => {
+    if (nextView) {
+      dispatch({ type: "SET_VIEW", payload: nextView });
+    }
+  }, []);
 
   return (
     <Container>
@@ -112,7 +92,9 @@ const SearchArea = () => {
                 >
                   <p>
                     {item.title}{" "}
-                    {!loading && view === item.view && totalResults}
+                    {searchData.length > 0 &&
+                      view === item.view &&
+                      totalResults}
                   </p>
                 </ToggleButton>
               );
@@ -122,30 +104,24 @@ const SearchArea = () => {
       </div>
       <div className="card-display-area">
         {error ? (
-          <h1>No results found</h1>
-        ) : searchData.length > 0 ? (
+          <h1>No data found</h1>
+        ) : (
           <>
             <CardWrapper>
-              {searchData.map((item) => {
-                return (
-                  <div key={item.id}>
-                    <DisplayCard item={item} listenerType={view} />
-                  </div>
-                );
-              })}
+              {searchData.map((item) => (
+                <div key={item.id}>
+                  <DisplayCard item={item} listenerType={view} />
+                </div>
+              ))}
             </CardWrapper>
+            {loading && (
+              <SpinnerWrapper style={{ height: "40px" }}>
+                <CircularProgress />
+              </SpinnerWrapper>
+            )}
+            <div style={{ height: "30px" }} ref={lastElementRef}></div>
           </>
-        ) : (
-          !loading && <h1>No data found</h1>
         )}
-
-        {loading && (
-          <SpinnerWrapper>
-            <CircularProgress />
-          </SpinnerWrapper>
-        )}
-
-        <div ref={lastElementRef}></div>
       </div>
     </Container>
   );

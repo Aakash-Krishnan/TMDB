@@ -1,4 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
+
+// reducers
 import homeReducer from "./feature/home/homeSlice";
 import userReducer from "./feature/User/userSlice";
 import discoverReducer from "./feature/Discover/discoverSlice";

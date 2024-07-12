@@ -1,53 +1,54 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/prop-types */
 import { useEffect, useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import CircularProgress from "@mui/material/CircularProgress";
-
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+//$ styles
 import {
   WholeDiv,
   DisplayCardContainer,
   GenreContainer,
   CardWrapper,
 } from "./style";
-import DisplayCard from "../../Components/DisplayCard";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
-import { useDispatch, useSelector } from "react-redux";
+import CircularProgress from "@mui/material/CircularProgress";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
+//$ Reducers
 import {
   setHomeData,
   getHomeDataAndBackDropsAPIByRedux,
 } from "../../redux/feature/home/homeSlice";
 
-const HomeContentPage = ({ list, getUrl, queryPath, listenerType }) => {
-  const specialsData = useSelector((state) => state.home);
+//$ components
+import DisplayCard from "../../Components/DisplayCard";
 
+const HomeContentPage = ({ list, getUrl, queryPath, listenerType }) => {
+  const dispatch = useDispatch();
+  const { homeData } = useSelector((state) => state.home);
+
+  //* Each toggle button is a specials.
   const [specials, setSpecials] = useState(
     `${
       queryPath[0].endPoint !== "" ? queryPath[0].endPoint : queryPath[0].path
     }-${listenerType}`
   );
 
-  const { homeData } = specialsData;
+  //* The homeData won't be having the data for the specials immediately. So until it fetches the data we are keeping empty.
   const { loading, data } = homeData[specials] || {
     loading: true,
     data: [],
     error: null,
   };
 
-  const reduxDispatch = useDispatch();
-
   useEffect(() => {
     if (!homeData[specials]) {
-      reduxDispatch(setHomeData(specials));
+      dispatch(setHomeData(specials));
     }
   }, [specials]);
 
   useEffect(() => {
     if (specials !== "" && data.length === 0) {
-      reduxDispatch(
+      dispatch(
         getHomeDataAndBackDropsAPIByRedux({
           queryPath,
           getUrl,

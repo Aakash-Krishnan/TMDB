@@ -1,6 +1,7 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react-hooks/exhaustive-deps */
+import { useState } from "react";
+import { useSetStatus } from "../../../hooks/useSetStatus";
 
+//$ styles
 import {
   BackgroundImg,
   Content,
@@ -10,9 +11,6 @@ import {
   ModalStyle,
   ModalIframe,
 } from "./style";
-
-import { IMAGES_BASE_URL } from "../../../constants";
-
 import {
   Box,
   CircularProgress,
@@ -23,11 +21,10 @@ import Modal from "@mui/material/Modal";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
+//$ constants & APIS
+import { IMAGES_BASE_URL, YOUTUBE_BASE_URL } from "../../../constants";
 import { ArrowToolTip } from "../../../Components/Tooltip";
-import { useState } from "react";
 import { watchProviderProcessor } from "../../../utils/dataProcessor";
-import { useSetStatus } from "../../../hooks/useSetStatus";
-import YouTubeEmbed from "../../../Components/YoutubeEmbeded";
 
 const HeaderInfo = ({
   headerData,
@@ -36,8 +33,9 @@ const HeaderInfo = ({
   watchProviders,
   data,
 }) => {
-  const [modal, setModal] = useState(false);
   const { setStatusAPI } = useSetStatus();
+
+  const [modal, setModal] = useState(false);
 
   const watchProvider = watchProviderProcessor(watchProviders);
 
@@ -117,8 +115,6 @@ const HeaderInfo = ({
               </Box>
               <p className="score-tag">User Score</p>
 
-              {/* <div style={{ margin: "0 8%" }}>EMOJI</div> */}
-
               <div className="vibe-tag">
                 <p>{`What's your vibe?`}</p>
               </div>
@@ -177,14 +173,16 @@ const HeaderInfo = ({
                   <WatchlistIcon watchlist={String(headerData.watchlist)} />
                 </div>
               </ArrowToolTip>
-              <div
-                className="play-icon"
-                onClick={() => {
-                  setModal(true);
-                }}
-              >
-                <PlayArrowIcon />
-                <p>Play Trailer</p>
+              <div className="play-trailer-wrapper">
+                <div
+                  className="play-icon"
+                  onClick={() => {
+                    setModal(true);
+                  }}
+                >
+                  <PlayArrowIcon />
+                  <p>Play Trailer</p>
+                </div>
               </div>
             </div>
 
@@ -221,7 +219,7 @@ const HeaderInfo = ({
         >
           <Box sx={ModalStyle}>
             <ModalIframe
-              src={`https://www.youtube.com/embed/${data.videos.results[0]?.key}`}
+              src={`${YOUTUBE_BASE_URL}${data.videos.results[0]?.key}`}
               allowFullScreen
             ></ModalIframe>
           </Box>

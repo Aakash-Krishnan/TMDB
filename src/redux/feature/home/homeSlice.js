@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 import { APIInstance } from "../../../api";
 
 export const getHomeDataAndBackDropsAPIByRedux = createAsyncThunk(

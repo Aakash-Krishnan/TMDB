@@ -2,10 +2,12 @@ import { v4 as uuidv4 } from "uuid";
 
 export const TMDB_LOGO =
   "https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg";
+export const TMDB_LOGO_MAIN =
+  "https://www.themoviedb.org/assets/2/v4/logos/v2/blue_long_2-9665a76b1ae401a510ec1e0ca40ddcb3b0cfe45f1d51b77a308fea0845885648.svg";
 
 export const IMAGES_BASE_URL = "https://image.tmdb.org/t/p/original/";
 
-export const YOUTUBE_BASE_URL = " https://www.youtube.com/watch?v=";
+export const YOUTUBE_BASE_URL = "https://www.youtube.com/embed/";
 
 export const urlType = {
   SEARCH: "search",
@@ -82,18 +84,6 @@ export const navItems = [
     path: "/tv-discover",
     title: "TV Shows",
   },
-  // {
-  //   path: "/people",
-  //   title: "People",
-  // },
-  // {
-  //   path: "/contact",
-  //   title: "Contact",
-  // },
-  // {
-  //   path: "/sign-in",
-  //   title: "Sign In",
-  // },
 ];
 
 export const searchViews = [

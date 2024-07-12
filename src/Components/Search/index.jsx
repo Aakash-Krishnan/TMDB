@@ -1,8 +1,9 @@
-/* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { IMAGES_BASE_URL } from "../../constants";
+//$ styles
+import { BackgroundImg, Content } from "./style";
 
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -10,25 +11,19 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import SearchIcon from "@mui/icons-material/Search";
 import Select from "@mui/material/Select";
-
-import { BackgroundImg, Content } from "./style";
 import { MenuItem } from "@mui/material";
-import { useSelector } from "react-redux";
+
+//$ constants
+import { IMAGES_BASE_URL } from "../../constants";
 
 const SearchBox = () => {
+  const navigate = useNavigate();
+
   const specialsData = useSelector((state) => state.home);
   const { backDropImages } = specialsData;
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [searchType, setSearchType] = useState("movie");
-  const navigate = useNavigate();
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      const val = e.target.value.split(" ").join("-");
-      navigate(`/search/${searchType}/${val}`);
-    }
-  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,6 +34,16 @@ const SearchBox = () => {
 
     return () => clearInterval(interval);
   }, [backDropImages.length]);
+
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === "Enter") {
+        const val = e.target.value.split(" ").join("-");
+        navigate(`/search/${searchType}/${val}`);
+      }
+    },
+    [searchType]
+  );
 
   return (
     <BackgroundImg

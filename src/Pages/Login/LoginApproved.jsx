@@ -1,62 +1,54 @@
-import { useEffect } from "react";
-
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-import {
-  getAccountDetails,
-  setApiKey,
-} from "../../redux/feature/User/userSlice";
 import { useNavigate } from "react-router-dom";
+
+//$ styles
+import { Container } from "./style";
 import { Button, CircularProgress } from "@mui/material";
 
+//$ reducers
+import { getAccountDetails } from "../../redux/feature/User/userSlice";
+
+//$ constants
+import { TMDB_LOGO_MAIN } from "../../constants";
+
 const LoginApproved = () => {
-  const userState = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { _ACCOUNT_NO } = useSelector((state) => state.user);
+
   useEffect(() => {
+    //* The request_token will be available in the url after we redirected back to our page.
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const request_token = urlParams.get("request_token");
-    dispatch(setApiKey(request_token));
 
-    dispatch(getAccountDetails());
+    dispatch(getAccountDetails(request_token));
   }, []);
 
-  const handleNavigation = () => {
-    if (userState._ACCOUNT_NO !== "") {
+  //* If the user is logged in, then navigate to the home page.
+  const handleNavigation = useCallback(() => {
+    if (_ACCOUNT_NO !== "") {
       navigate("/home");
     }
-  };
+  }, [_ACCOUNT_NO]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        placeItems: "center",
-        height: "100vh",
-        background:
-          "linear-gradient(163deg, rgba(13,37,63,1) 30%, rgba(1,180,228,1) 100%)",
-      }}
-    >
-      <img
-        style={{ width: "90%" }}
-        src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_long_2-9665a76b1ae401a510ec1e0ca40ddcb3b0cfe45f1d51b77a308fea0845885648.svg"
-      />
-      <h2 style={{ color: "white", margin: "20px 0px" }}>
+    <Container>
+      <img alt="tmdb-logo" src={TMDB_LOGO_MAIN} />
+      <h2>
         <i>One stop away from exploring the world of movies and series</i>
       </h2>
       <Button
-        style={{ fontSize: "20px", borderRadius: "8px" }}
+        className="login-approved-button"
         variant="contained"
-        disabled={userState._ACCOUNT_NO === "" ? true : false}
+        disabled={_ACCOUNT_NO === "" ? true : false}
         onClick={handleNavigation}
       >
-        {userState._ACCOUNT_NO === "" ? <CircularProgress /> : "Surf in"}
+        {_ACCOUNT_NO === "" ? <CircularProgress /> : "Surf in"}
       </Button>
-    </div>
+    </Container>
   );
 };
 

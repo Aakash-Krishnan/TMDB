@@ -1,4 +1,6 @@
 import { useSelector } from "react-redux";
+
+//$ constants and APIS
 import { APIInstance } from "../api";
 import { getApiUrls, urlType } from "../constants";
 
@@ -25,7 +27,7 @@ export const useCollections = () => {
       }
       dispatch({ type: "SET_DATA", payload: res.data.results });
     } catch (err) {
-      console.error(err);
+      console.error("COLLECTION ERROR", err);
       dispatch({ type: "ERROR", payload: err });
     } finally {
       dispatch({ type: "SETTLED" });

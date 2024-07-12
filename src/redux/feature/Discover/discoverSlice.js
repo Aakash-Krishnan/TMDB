@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 import { APIInstance } from "../../../api";
 import { getApiUrls, urlType } from "../../../constants";
 
@@ -9,7 +10,6 @@ export const getDiscoversAPI = createAsyncThunk(
       if (page === -1) {
         return;
       }
-      console.log("TYPE: ", type);
       const res = await APIInstance(
         getApiUrls({
           urlFor: urlType.DISCOVER_MOVIES_SERIES,

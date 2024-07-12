@@ -1,3 +1,6 @@
+//! Disclaimer: Sorry to keep this code complicated.
+
+//NOTE: I'm just taking the necessary datas from the API's response and returning it as an object.
 export const dataProcessor = (data, type, ratings, tvCrew) => {
   const id = data.id;
   const backdrop = data.backdrop_path;
@@ -101,12 +104,14 @@ export const dataProcessor = (data, type, ratings, tvCrew) => {
   return obj;
 };
 
+//NOTE: Just converting minutes to hours.
 const minToHour = (minutes) => {
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
   return `${hours}h ${remainingMinutes}m`;
 };
 
+//NOTE: Tried my best to cover some possible way to fetch the watch provider for each content.
 export const watchProviderProcessor = (watchProviders) => {
   const provider =
     Object.keys(watchProviders).length > 0

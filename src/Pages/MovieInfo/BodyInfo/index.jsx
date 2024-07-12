@@ -1,22 +1,26 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/prop-types */
-import { Container } from "./style";
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 
+//$ styles
+import { Container } from "./style";
+
+import {
+  bodyInfoInitialState,
+  bodyInfoReducer,
+} from "../../../reducers/bodyInfoReducer";
+
+//$ APIs and components
 import { getRecommendationsAPI } from "../../../api/index";
 import CastNCrew from "./CastNCrew";
 import LatestSeasonInfo from "./LatestSeasonInfo";
 import Reviews from "./Reviews";
 import TrailersNPosters from "./TrailersNPosters";
 import Recommendations from "./Recommendations";
-import {
-  bodyInfoInitialState,
-  bodyInfoReducer,
-} from "../../../reducers/bodyInfoReducer";
 
 const BodyInfo = ({ type, data }) => {
-  const [state, dispatch] = useReducer(bodyInfoReducer, bodyInfoInitialState);
-  const { loading, images, recommendations, view } = state;
+  const [{ loading, images, recommendations, view }, dispatch] = useReducer(
+    bodyInfoReducer,
+    bodyInfoInitialState
+  );
 
   useEffect(() => {
     const obj = {
@@ -31,13 +35,11 @@ const BodyInfo = ({ type, data }) => {
     getRecommendationsAPI({ id: data.id, type, dispatch });
   }, []);
 
-  const handleChange = (event, newView) => {
+  const handleChange = useCallback((_, newView) => {
     if (newView) {
       dispatch({ type: "SET_VIEW", payload: newView });
     }
-  };
-
-  // console.log("RECOMMENDATIONS", recommendations);
+  }, []);
 
   return (
     <Container>

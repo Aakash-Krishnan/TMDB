@@ -1,30 +1,36 @@
-/* eslint-disable react-refresh/only-export-components */
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useReducer } from "react";
 import { useParams } from "react-router";
+
+//$ custom hooks
+import useAuth from "../../hooks/useAuth";
+
+//$ styles
 import { Container } from "./style";
-
 import { CircularProgress } from "@mui/material";
-
-import { dataProcessor } from "../../utils/dataProcessor";
-import { getMovieInfoDataAPI, getStatusAPI } from "../../api";
-import HeaderInfo from "./HeaderInfo";
-import BodyInfo from "./BodyInfo";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
+
+//$ reducers
 import {
   infoInitialState,
   informationReducer,
 } from "../../reducers/informationReducer";
-import useAuth from "../../hooks/useAuth";
+
+//$ constants & components
+import { getMovieInfoDataAPI, getStatusAPI } from "../../api";
+import { dataProcessor } from "../../utils/dataProcessor";
+import HeaderInfo from "./HeaderInfo";
+import BodyInfo from "./BodyInfo";
 
 const MovieInfo = () => {
+  //* custom hook to check the user Authentication.
   useAuth();
 
   const { type, id } = useParams();
 
-  const [state, dispatch] = useReducer(informationReducer, infoInitialState);
-  const { loading, tvCrew, tvRatings, data, watchProviders, headerData } =
-    state;
+  const [
+    { loading, tvCrew, tvRatings, data, watchProviders, headerData },
+    dispatch,
+  ] = useReducer(informationReducer, infoInitialState);
 
   useEffect(() => {
     dispatch({ type: "LOADING" });

@@ -1,11 +1,10 @@
-/* eslint-disable react/prop-types */
 import { CardWrapper, RecommendationsWrapper } from "./style";
-import { SpinnerWrapper } from "../../../Components/DisplayArea/SearchArea/style";
 import { CircularProgress } from "@mui/material";
+import { SpinnerWrapper } from "../../../Components/DisplayArea/SearchArea/style";
+
 import DisplayCard from "../../../Components/DisplayCard";
 
 const Recommendations = ({ loading, recommendations, type }) => {
-  console.log("Recommendations", recommendations);
   return (
     <>
       <RecommendationsWrapper>

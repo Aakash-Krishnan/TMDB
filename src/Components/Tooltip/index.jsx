@@ -23,3 +23,26 @@ export const ArrowToolTip = styled(({ className, ...props }) => (
       background-color: #0d253f;
       font-size: 1em;
   `);
+
+
+export const CyanToolTip = styled(({ className, ...props }) => (
+  <Tooltip
+    arrow
+    {...props}
+    componentsProps={{
+      tooltip: {
+        className: className,
+        sx: {
+          bgcolor: "#2bbbd1",
+          "& .MuiTooltip-arrow": {
+            color: "#2bbbd1",
+          },
+        },
+      },
+    }}
+  />
+))(`
+        color: white;
+        background-color: #2bbbd1;
+        font-size: 1em;
+    `);

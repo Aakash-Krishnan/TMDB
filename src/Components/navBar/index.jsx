@@ -1,37 +1,45 @@
-import { NavLink } from "react-router-dom";
-import { TMDB_LOGO, navItems } from "../../constants";
-import { Container } from "./style";
+import { useCallback, useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { ClickAwayListener, Tooltip } from "@mui/material";
+
+//$ styles
+import { Container } from "./style";
+import { ClickAwayListener } from "@mui/material";
 import { Button } from "@mui/base";
+
+//$ reducers
 import { deleteSession } from "../../redux/feature/User/userSlice";
 
-const Navbar = () => {
-  const [active, setActive] = useState(false);
-  const [userName, setUserName] = useState("");
-  const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+//$ constants & components
+import { TMDB_LOGO, navItems } from "../../constants";
+import { CyanToolTip } from "../Tooltip";
 
+const Navbar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { userName, sessionDeleted } = useSelector((state) => state.user);
+
+  const [active, setActive] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const handleTooltipOpen = () => {
-    setOpen(true);
-  };
-  const handleTooltipClose = () => {
-    setOpen(false);
-  };
-
   useEffect(() => {
-    if (localStorage.getItem("movieToken") !== null) {
-      setActive(true);
+    if (sessionDeleted) {
+      navigate("/login");
     }
-  }, [user.approved, user.userName]);
+  }, [sessionDeleted]);
 
-  // TODO: Fix the issue with the username not updating
   useEffect(() => {
-    setUserName(user.userName);
-  }, [user.userName]);
+    setActive(!!localStorage.getItem("movieToken"));
+  }, [userName]);
+
+  const handleTooltipOpen = useCallback(() => {
+    setOpen(true);
+  }, []);
+
+  const handleTooltipClose = useCallback(() => {
+    setOpen(false);
+  }, []);
 
   return (
     <Container>
@@ -59,7 +67,7 @@ const Navbar = () => {
 
             <ClickAwayListener onClickAway={handleTooltipClose}>
               <div>
-                <Tooltip
+                <CyanToolTip
                   PopperProps={{
                     disablePortal: true,
                   }}
@@ -72,14 +80,7 @@ const Navbar = () => {
                   title={
                     <div>
                       <Button
-                        style={{
-                          border: "none",
-                          outline: "none",
-                          background: "inherit",
-                          color: "white",
-                          fontSize: "16px",
-                          cursor: "pointer",
-                        }}
+                        className="sign-out-button"
                         onClick={() => dispatch(deleteSession())}
                       >
                         Sign out
@@ -87,20 +88,10 @@ const Navbar = () => {
                     </div>
                   }
                 >
-                  <Button
-                    style={{
-                      background: "inherit",
-                      border: "none",
-                      outline: "none",
-                      color: "white",
-                      cursor: "pointer",
-                      fontSize: "16px",
-                    }}
-                    onClick={handleTooltipOpen}
-                  >
+                  <Button className="userName-btn" onClick={handleTooltipOpen}>
                     {userName}
                   </Button>
-                </Tooltip>
+                </CyanToolTip>
               </div>
             </ClickAwayListener>
           </ul>

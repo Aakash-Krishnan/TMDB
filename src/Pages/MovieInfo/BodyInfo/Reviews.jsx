@@ -1,8 +1,7 @@
-/* eslint-disable react/prop-types */
-import { IMAGES_BASE_URL } from "../../../constants";
-
-import { Card, CardActionArea, CardContent, Divider } from "@mui/material";
 import { DividerWrapper, ReviewsWrapper } from "./style";
+import { Card, CardActionArea, CardContent, Divider } from "@mui/material";
+
+import { IMAGES_BASE_URL } from "../../../constants";
 import moment from "moment";
 
 const Reviews = ({ data }) => {

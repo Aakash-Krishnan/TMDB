@@ -2,21 +2,26 @@ import { useRef } from "react";
 
 export const useInfiniteLoad = () => {
   const lastElementRef = useRef(null);
+  const observerRef = useRef(null);
 
   const elementObserver = ({ loading, page, callBackFn }) => {
-    if (loading === true || page === -1) return;
-    const observer = new IntersectionObserver((entries) => {
+    if (loading || page === -1) {
+      if (observerRef.current) observerRef.current.disconnect();
+      return;
+    }
+
+    observerRef.current = new IntersectionObserver((entries) => {
       const el = entries[0];
-      // console.log("ELEMETN", el.isIntersecting, page);
       if (el && el.isIntersecting) {
         callBackFn(page + 1);
       }
     });
 
-    if (lastElementRef.current) observer.observe(lastElementRef.current);
+    if (lastElementRef.current)
+      observerRef.current.observe(lastElementRef.current);
 
     return () => {
-      if (lastElementRef.current) observer.disconnect(lastElementRef.current);
+      if (observerRef.current) observerRef.current.disconnect();
     };
   };
 

@@ -6,7 +6,7 @@ export const WholeDiv = styled.div`
   width: 90%;
   margin: auto;
   flex-direction: column;
-  padding: 30px 0px;
+  padding: 30px 0px 30px 60px;
 `;
 
 export const DisplayCardContainer = styled.div`

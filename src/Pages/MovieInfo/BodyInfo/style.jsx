@@ -4,7 +4,7 @@ import Card from "@mui/material/Card";
 export const Container = styled.div`
   width: 100%;
   margin-top: 20px;
-  padding: 10px 50px;
+  padding: 10px 10%;
 
   .container-wrapper {
     width: 100%;
@@ -171,7 +171,7 @@ export const ReviewsWrapper = styled.div`
         margin-top: 30px;
         font-size: 14px;
         .content {
-          font-family: cursive ;
+          font-family: cursive;
         }
       }
     }

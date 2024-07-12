@@ -1,22 +1,23 @@
-/* eslint-disable react/prop-types */
+//$ custom hooks
+import { useContentInfo } from "../../hooks/useContentInfo";
 
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import { CardActionArea } from "@mui/material";
-
-import { IMAGES_BASE_URL } from "../../constants";
-
-import CircularProgress from "@mui/material/CircularProgress";
-
+//$ styles
 import {
   CardContentWrapper,
   MoviesCard,
   ProgressCircle,
   ProgressLabel,
 } from "./style";
-import { useContentInfo } from "../../hooks/useContentInfo";
+import CircularProgress from "@mui/material/CircularProgress";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import { CardActionArea } from "@mui/material";
+
+//$ constants
+import { IMAGES_BASE_URL } from "../../constants";
 
 const DisplayCard = ({ item, listenerType }) => {
+  //* custom hook to handle navigation.
   const { handleNavigation } = useContentInfo();
 
   return (

@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 import { APIInstance } from "../../../api";
 
+//NOTE: To run this in local add an .env file and add this your app base url
 const REDIRECT_URL = import.meta.env.VITE_API_URL;
 
-// TODO: Fix the issue with the Redirecting in build.
 export const getApiKeyRequest = createAsyncThunk("user/getApiKey", async () => {
   try {
     const {
@@ -17,10 +18,11 @@ export const getApiKeyRequest = createAsyncThunk("user/getApiKey", async () => {
 
 export const getAccountDetails = createAsyncThunk(
   "user/getAccountDetails",
-  async (payload, { getState }) => {
+  async (payload, { getState, dispatch }) => {
     try {
+      dispatch(setApiKey(payload));
       const { request_token } = getState().user;
-      console.log(request_token);
+
       const _sessionId = await APIInstance.post(`authentication/session/new`, {
         request_token: request_token,
       });
@@ -50,31 +52,40 @@ export const getAccountDetails = createAsyncThunk(
   }
 );
 
-// TODO: Fix the issue with the sign out API.
 export const deleteSession = createAsyncThunk(
   "user/deleteSession",
-  async (payload, { getState }) => {
+  async (_, { getState, rejectWithValue, dispatch }) => {
     try {
-      console.log("ERROR", getState().user._sessionId);
-      await APIInstance.delete(`authentication/session`, {
-        session_id: getState().user._sessionId,
+      const sId = getState().user._sessionId;
+      if (!sId) {
+        return rejectWithValue({ err: "No session found" });
+      }
+
+      const res = await APIInstance.delete(`authentication/session`, {
+        data: { session_id: sId },
       });
-      localStorage.removeItem("movieToken");
+
+      if (res.data.success) {
+        localStorage.removeItem("movieToken");
+        dispatch(sessionDeleted());
+      }
       return {};
     } catch (err) {
-      return { err };
+      const errorMessage =
+        err.response?.data?.status_message || "Unknown error";
+      return rejectWithValue(errorMessage);
     }
   }
 );
 
 const initialState = {
   loading: true,
-  approved: false,
   _sessionId: "",
   request_token: "",
   _ACCOUNT_NO: "",
   userName: "",
   error: null,
+  sessionDeleted: false,
 };
 
 export const userSlice = createSlice({
@@ -91,6 +102,9 @@ export const userSlice = createSlice({
       state._sessionId = sId;
       state.userName = userName;
       state.loading = false;
+    },
+    sessionDeleted: (state) => {
+      state.sessionDeleted = true;
     },
   },
   extraReducers: (builder) => {
@@ -114,14 +128,15 @@ export const userSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(deleteSession.fulfilled, () => {
-      initialState;
+      return initialState;
     });
     builder.addCase(deleteSession.rejected, (state, action) => {
-      state.error = action.payload.err.response.data.status_message;
+      state.loading = false;
+      state.error = action.payload;
     });
   },
 });
 
-export const { reset, setApprove, setApiKey, setAccDetails } =
+export const { reset, setApprove, setApiKey, setAccDetails, sessionDeleted } =
   userSlice.actions;
 export default userSlice.reducer;

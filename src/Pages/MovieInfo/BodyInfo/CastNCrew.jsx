@@ -1,4 +1,5 @@
-/* eslint-disable react/prop-types */
+//$ styles
+import { CardWrapper, DividerWrapper, MoviesCard } from "./style";
 import {
   CardActionArea,
   CardContent,
@@ -7,7 +8,8 @@ import {
   Divider,
 } from "@mui/material";
 import { SpinnerWrapper } from "../../../Components/DisplayArea/SearchArea/style";
-import { CardWrapper, DividerWrapper, MoviesCard } from "./style";
+
+//$ constants
 import { IMAGES_BASE_URL } from "../../../constants";
 
 const CastNCrew = ({ data }) => {

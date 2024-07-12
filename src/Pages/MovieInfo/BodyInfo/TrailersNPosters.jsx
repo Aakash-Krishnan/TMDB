@@ -1,6 +1,3 @@
-/* eslint-disable react/prop-types */
-import { IMAGES_BASE_URL } from "../../../constants";
-
 import {
   CardWrapper,
   DividerWrapper,
@@ -14,6 +11,8 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
+
+import { IMAGES_BASE_URL } from "../../../constants";
 
 const TrailersNPosters = ({ view, handleChange, images }) => {
   return (
