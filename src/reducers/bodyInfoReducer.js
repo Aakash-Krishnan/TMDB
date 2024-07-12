@@ -25,7 +25,6 @@ export function bodyInfoReducer(state, action) {
         view: action.payload,
       };
     case "SET_RECOMMENDATIONS":
-      console.log("RECOMMENDATIONS", action.payload);
       return {
         ...state,
         loading: false,
