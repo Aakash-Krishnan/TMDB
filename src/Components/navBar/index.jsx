@@ -1,18 +1,18 @@
-import { useCallback, useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
 
 //$ styles
+import { Button } from "@mui/base";
 import { Container } from "./style";
 import { ClickAwayListener } from "@mui/material";
-import { Button } from "@mui/base";
 
 //$ reducers
 import { deleteSession } from "../../redux/feature/User/userSlice";
 
 //$ constants & components
-import { TMDB_LOGO, navItems } from "../../constants";
 import { CyanToolTip } from "../Tooltip";
+import { TMDB_LOGO, navItems } from "../../constants";
 
 const Navbar = () => {
   const dispatch = useDispatch();

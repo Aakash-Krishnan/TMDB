@@ -1,17 +1,16 @@
-import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
 
 //$ styles
-import { BackgroundImg, Content } from "./style";
-
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import SearchIcon from "@mui/icons-material/Search";
-import Select from "@mui/material/Select";
 import { MenuItem } from "@mui/material";
+import Select from "@mui/material/Select";
+import { BackgroundImg, Content } from "./style";
+import InputLabel from "@mui/material/InputLabel";
+import SearchIcon from "@mui/icons-material/Search";
+import FormControl from "@mui/material/FormControl";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
 
 //$ constants
 import { IMAGES_BASE_URL } from "../../constants";

@@ -8,10 +8,10 @@ import {
   ProgressCircle,
   ProgressLabel,
 } from "./style";
-import CircularProgress from "@mui/material/CircularProgress";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import { CardActionArea } from "@mui/material";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import CircularProgress from "@mui/material/CircularProgress";
 
 //$ constants
 import { IMAGES_BASE_URL } from "../../constants";

@@ -1,14 +1,14 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 //$ custom hooks
 import useAuth from "../../hooks/useAuth.js";
 import { useInfiniteLoad } from "../../hooks/useInfiniteLoad";
 
 //$ styles
-import { CardWrapper, DisplayCardContainer, WholeDiv } from "./style";
 import { CircularProgress } from "@mui/material";
+import { CardWrapper, DisplayCardContainer, WholeDiv } from "./style";
 import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
 
 //$ reducers

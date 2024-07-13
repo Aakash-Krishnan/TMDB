@@ -15,6 +15,7 @@ import LatestSeasonInfo from "./LatestSeasonInfo";
 import Reviews from "./Reviews";
 import TrailersNPosters from "./TrailersNPosters";
 import Recommendations from "./Recommendations";
+import { ACTION_TYPES } from "../../../constants";
 
 const BodyInfo = ({ type, data }) => {
   const [{ loading, images, recommendations, view }, dispatch] = useReducer(
@@ -29,15 +30,15 @@ const BodyInfo = ({ type, data }) => {
       posters: data?.images?.posters,
       logos: data?.images?.logos,
     };
-    dispatch({ type: "SET_IMAGES", payload: obj });
-    dispatch({ type: "LOADING" });
+    dispatch({ type: ACTION_TYPES.SET_IMAGES, payload: obj });
+    dispatch({ type: ACTION_TYPES.LOADING });
 
     getRecommendationsAPI({ id: data.id, type, dispatch });
   }, []);
 
   const handleChange = useCallback((_, newView) => {
     if (newView) {
-      dispatch({ type: "SET_VIEW", payload: newView });
+      dispatch({ type: ACTION_TYPES.SET_VIEW, payload: newView });
     }
   }, []);
 

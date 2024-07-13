@@ -1,4 +1,4 @@
-//! Disclaimer: Sorry to keep this code complicated.
+//! Disclaimer: Sorry to make this code look complicated.
 
 //NOTE: I'm just taking the necessary datas from the API's response and returning it as an object.
 export const dataProcessor = (data, type, ratings, tvCrew) => {

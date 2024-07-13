@@ -10,6 +10,7 @@ export const IMAGES_BASE_URL = "https://image.tmdb.org/t/p/original/";
 export const YOUTUBE_BASE_URL = "https://www.youtube.com/embed/";
 
 export const urlType = {
+  AUTHENTICATION: "authentication",
   SEARCH: "search",
   TV_CREW: "tvCrew",
   TV_RATINGS: "tvRatings",
@@ -25,6 +26,8 @@ export const urlType = {
 
 export const getApiUrls = ({
   urlFor,
+  request_token,
+  REDIRECT_URL,
   type,
   query,
   id,
@@ -36,6 +39,8 @@ export const getApiUrls = ({
   page = 1,
 }) => {
   switch (urlFor) {
+    case urlType.AUTHENTICATION:
+      return `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=${REDIRECT_URL}/approved`;
     case urlType.SEARCH:
       return `search/${type}?query=${query}&include_adult=false&language=en-US&page=${page}`;
     case urlType.TV_CREW:
@@ -157,3 +162,18 @@ export const queries = [
     ],
   },
 ];
+
+export const ACTION_TYPES = {
+  RESET: "RESET",
+  RESET_HEADER: "RESET_HEADER",
+  SET_HEADER: "SET_HEADER",
+  LOADING: "LOADING",
+  SET_PAGE: "SET_PAGE",
+  SET_IMAGES: "SET_IMAGES",
+  SET_VIEW: "SET_VIEW",
+  SET_SPECIALS: "SET_SPECIALS",
+  SET_DATA: "SET_DATA",
+  SET_RECOMMENDATIONS: "SET_RECOMMENDATIONS",
+  ERROR: "ERROR",
+  SETTLED: "SETTLED",
+};

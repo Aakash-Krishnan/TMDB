@@ -22,7 +22,7 @@ import {
 //$ constants & components
 import DisplayCard from "../../DisplayCard";
 import { getSearchDatasAPI } from "../../../api";
-import { searchViews } from "../../../constants";
+import { ACTION_TYPES, searchViews } from "../../../constants";
 
 const SearchArea = () => {
   //* custom hook to verify user authentication.
@@ -40,7 +40,7 @@ const SearchArea = () => {
 
   //* When ever the type:{move/tv} changes, this will reset the state.
   useEffect(() => {
-    dispatch({ type: "SET_VIEW", payload: type });
+    dispatch({ type: ACTION_TYPES.SET_VIEW, payload: type });
   }, [type]);
 
   //* To handle the infinite scrolling.
@@ -48,7 +48,8 @@ const SearchArea = () => {
     const cleanupObserver = elementObserver({
       loading,
       page,
-      callBackFn: (res) => dispatch({ type: "SET_PAGE", payload: res }),
+      callBackFn: (res) =>
+        dispatch({ type: ACTION_TYPES.SET_PAGE, payload: res }),
     });
 
     return () => {
@@ -59,7 +60,7 @@ const SearchArea = () => {
   //* when ever the page/view/query changes, this will fetch the data from the api.
   useEffect(() => {
     if (page !== -1) {
-      dispatch({ type: "LOADING" });
+      dispatch({ type: ACTION_TYPES.LOADING });
       getSearchDatasAPI({ page, view, query, searchData, dispatch });
     }
   }, [view, page, query]);
@@ -67,7 +68,7 @@ const SearchArea = () => {
   //* to handle the view change.
   const handleChange = useCallback((_, nextView) => {
     if (nextView) {
-      dispatch({ type: "SET_VIEW", payload: nextView });
+      dispatch({ type: ACTION_TYPES.SET_VIEW, payload: nextView });
     }
   }, []);
 

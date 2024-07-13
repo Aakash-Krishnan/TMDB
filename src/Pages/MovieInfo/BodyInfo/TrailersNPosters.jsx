@@ -12,7 +12,7 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 
-import { IMAGES_BASE_URL } from "../../../constants";
+import { IMAGES_BASE_URL, YOUTUBE_BASE_URL } from "../../../constants";
 
 const TrailersNPosters = ({ view, handleChange, images }) => {
   return (
@@ -41,7 +41,7 @@ const TrailersNPosters = ({ view, handleChange, images }) => {
                 <iframe
                   className="video-player"
                   allowFullScreen
-                  src={`https://www.youtube.com/embed/${item.key}`}
+                  src={`${YOUTUBE_BASE_URL}${item.key}`}
                 />
               </div>
             ) : (

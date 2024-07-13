@@ -1,3 +1,5 @@
+import { ACTION_TYPES } from "../constants";
+
 export const collectionsInitialState = {
   data: [],
   view: "movies",
@@ -8,35 +10,35 @@ export const collectionsInitialState = {
 
 export function collectionsReducer(state, action) {
   switch (action.type) {
-    case "RESET":
+    case ACTION_TYPES.RESET:
       return {
         ...collectionsInitialState,
         view: action.payload,
         loading: true,
       };
-    case "LOADING":
+    case ACTION_TYPES.LOADING:
       return {
         ...state,
         loading: true,
       };
-    case "SET_PAGE":
+    case ACTION_TYPES.SET_PAGE:
       return {
         ...state,
         page: action.payload,
       };
-    case "SET_DATA":
+    case ACTION_TYPES.SET_DATA:
       return {
         ...state,
         loading: false,
         data: [...state.data, ...action.payload],
       };
-    case "ERROR":
+    case ACTION_TYPES.ERROR:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
-    case "SETTLED":
+    case ACTION_TYPES.SETTLED:
       return {
         ...state,
         loading: false,

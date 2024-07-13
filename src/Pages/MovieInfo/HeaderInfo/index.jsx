@@ -18,13 +18,13 @@ import {
   ImageListItemBar,
 } from "@mui/material";
 import Modal from "@mui/material/Modal";
-import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 
 //$ constants & APIS
-import { IMAGES_BASE_URL, YOUTUBE_BASE_URL } from "../../../constants";
 import { ArrowToolTip } from "../../../Components/Tooltip";
 import { watchProviderProcessor } from "../../../utils/dataProcessor";
+import { IMAGES_BASE_URL, YOUTUBE_BASE_URL } from "../../../constants";
 
 const HeaderInfo = ({
   headerData,

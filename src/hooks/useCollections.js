@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 
 //$ constants and APIS
 import { APIInstance } from "../api";
-import { getApiUrls, urlType } from "../constants";
+import { ACTION_TYPES, getApiUrls, urlType } from "../constants";
 
 export const useCollections = () => {
   const { _ACCOUNT_NO } = useSelector((state) => state.user);
@@ -22,15 +22,14 @@ export const useCollections = () => {
         })
       );
       if (res.data.results.length === 0) {
-        dispatch({ type: "SET_PAGE", payload: -1 });
+        dispatch({ type: ACTION_TYPES.SET_PAGE, payload: -1 });
         return;
       }
-      dispatch({ type: "SET_DATA", payload: res.data.results });
+      dispatch({ type: ACTION_TYPES.SET_DATA, payload: res.data.results });
     } catch (err) {
-      console.error("COLLECTION ERROR", err);
-      dispatch({ type: "ERROR", payload: err });
+      dispatch({ type: ACTION_TYPES.ERROR, payload: err });
     } finally {
-      dispatch({ type: "SETTLED" });
+      dispatch({ type: ACTION_TYPES.SETTLED });
     }
   };
 

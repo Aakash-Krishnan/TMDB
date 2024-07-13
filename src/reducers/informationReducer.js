@@ -1,3 +1,5 @@
+import { ACTION_TYPES } from "../constants";
+
 export const infoInitialState = {
   loading: true,
   tvCrew: {},
@@ -10,23 +12,23 @@ export const infoInitialState = {
 
 export function informationReducer(state, action) {
   switch (action.type) {
-    case "LOADING":
+    case ACTION_TYPES.LOADING:
       return {
         ...state,
         loading: true,
         headerData: {},
       };
-    case "RESET_HEADER":
+    case ACTION_TYPES.RESET_HEADER:
       return {
         ...state,
         headerData: {},
       };
-    case "SET_HEADER":
+    case ACTION_TYPES.SET_HEADER:
       return {
         ...state,
         headerData: action.payload,
       };
-    case "SET_DATA":
+    case ACTION_TYPES.SET_DATA:
       return {
         ...state,
         loading: false,
@@ -35,7 +37,7 @@ export function informationReducer(state, action) {
         data: action.payload[2]?.value?.data,
         watchProviders: action.payload[3]?.value?.data?.results,
       };
-    case "ERROR":
+    case ACTION_TYPES.ERROR:
       return {
         ...state,
         loading: false,

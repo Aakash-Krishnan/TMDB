@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { APIInstance } from "../../../api";
+import { getApiUrls, urlType } from "../../../constants";
 
 //NOTE: To run this in local add an .env file and add this your app base url
 const REDIRECT_URL = import.meta.env.VITE_API_URL;
@@ -10,7 +11,11 @@ export const getApiKeyRequest = createAsyncThunk("user/getApiKey", async () => {
     const {
       data: { request_token },
     } = await APIInstance.get(`authentication/token/new`);
-    window.location.href = `https://www.themoviedb.org/authenticate/${request_token}?redirect_to=${REDIRECT_URL}/approved`;
+    window.location.href = getApiUrls({
+      urlFor: urlType.AUTHENTICATION,
+      request_token,
+      REDIRECT_URL,
+    });
   } catch (err) {
     return { err };
   }

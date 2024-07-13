@@ -1,5 +1,5 @@
-import { useEffect, useReducer } from "react";
 import { useParams } from "react-router";
+import { useEffect, useReducer } from "react";
 
 //$ custom hooks
 import useAuth from "../../hooks/useAuth";
@@ -16,10 +16,11 @@ import {
 } from "../../reducers/informationReducer";
 
 //$ constants & components
-import { getMovieInfoDataAPI, getStatusAPI } from "../../api";
-import { dataProcessor } from "../../utils/dataProcessor";
-import HeaderInfo from "./HeaderInfo";
 import BodyInfo from "./BodyInfo";
+import HeaderInfo from "./HeaderInfo";
+import { ACTION_TYPES } from "../../constants";
+import { dataProcessor } from "../../utils/dataProcessor";
+import { getMovieInfoDataAPI, getStatusAPI } from "../../api";
 
 const MovieInfo = () => {
   //* custom hook to check the user Authentication.
@@ -33,7 +34,7 @@ const MovieInfo = () => {
   ] = useReducer(informationReducer, infoInitialState);
 
   useEffect(() => {
-    dispatch({ type: "LOADING" });
+    dispatch({ type: ACTION_TYPES.LOADING });
 
     getMovieInfoDataAPI({
       id,
@@ -44,10 +45,10 @@ const MovieInfo = () => {
 
   useEffect(() => {
     if (!loading) {
-      dispatch({ type: "RESET_HEADER" });
+      dispatch({ type: ACTION_TYPES.RESET_HEADER });
       const res = dataProcessor(data, type, tvRatings, tvCrew);
       getStatusAPI(res, type, data.id, (result) =>
-        dispatch({ type: "SET_HEADER", payload: result })
+        dispatch({ type: ACTION_TYPES.SET_HEADER, payload: result })
       );
     }
   }, [loading]);
@@ -63,7 +64,7 @@ const MovieInfo = () => {
           <HeaderInfo
             headerData={headerData}
             setheaderData={(res) =>
-              dispatch({ type: "SET_HEADER", payload: res })
+              dispatch({ type: ACTION_TYPES.SET_HEADER, payload: res })
             }
             type={type}
             watchProviders={watchProviders}

@@ -1,3 +1,5 @@
+import { ACTION_TYPES } from "../constants";
+
 // NOTE: This code is not in use. Changed this to redux....
 export const homeInitialState = {
   loading: true,
@@ -8,28 +10,28 @@ export const homeInitialState = {
 
 export function homeReducer(state, action) {
   switch (action.type) {
-    case "RESET":
+    case ACTION_TYPES.RESET:
       return {
         ...homeInitialState,
       };
-    case "LOADING":
+    case ACTION_TYPES.LOADING:
       return {
         ...state,
         loading: true,
       };
-    case "SET_SPECIALS":
+    case ACTION_TYPES.SET_SPECIALS:
       return {
         ...state,
         specials: action.payload,
       };
-    case "SET_DATA":
+    case ACTION_TYPES.SET_DATA:
       return {
         ...state,
         data: action.payload,
         loading: false,
       };
 
-    case "ERROR":
+    case ACTION_TYPES.ERROR:
       return {
         ...state,
         loading: false,

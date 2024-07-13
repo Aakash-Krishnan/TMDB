@@ -1,3 +1,5 @@
+import { ACTION_TYPES } from "../constants";
+
 export const bodyInfoInitialState = {
   loading: true,
   view: "videos",
@@ -8,29 +10,29 @@ export const bodyInfoInitialState = {
 
 export function bodyInfoReducer(state, action) {
   switch (action.type) {
-    case "LOADING":
+    case ACTION_TYPES.LOADING:
       return {
         ...state,
         loading: true,
       };
 
-    case "SET_IMAGES":
+    case ACTION_TYPES.SET_IMAGES:
       return {
         ...state,
         images: action.payload,
       };
-    case "SET_VIEW":
+    case ACTION_TYPES.SET_VIEW:
       return {
         ...state,
         view: action.payload,
       };
-    case "SET_RECOMMENDATIONS":
+    case ACTION_TYPES.SET_RECOMMENDATIONS:
       return {
         ...state,
         loading: false,
         recommendations: action.payload,
       };
-    case "ERROR":
+    case ACTION_TYPES.ERROR:
       return {
         ...state,
         loading: false,

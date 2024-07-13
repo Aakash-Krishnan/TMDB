@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getApiUrls, urlType } from "../constants";
+import { ACTION_TYPES, getApiUrls, urlType } from "../constants";
 
 //NOTE: to run this in local environment, you need to create a .env file in the root directory and add your keys and token.
 const apiKey = import.meta.env.VITE_API_KEY;
@@ -35,11 +35,10 @@ export const getHomeDataAndBackDropsAPI = async ({
     const url = getUrl(path, endPoint);
 
     const res = await APIInstance.get(url);
-    dispatch({ type: "SET_DATA", payload: res.data.results });
+    dispatch({ type: ACTION_TYPES.SET_DATA, payload: res.data.results });
     processImages(res.data.results, specials);
   } catch (err) {
-    dispatch({ type: "ERROR", payload: err });
-    console.log("ERROR COLLECTING IMAGES:", err);
+    dispatch({ type: ACTION_TYPES.ERROR, payload: err });
   }
 };
 
@@ -65,7 +64,7 @@ export const getMovieInfoDataAPI = async ({ id, type, dispatch }) => {
   ]);
 
   pSettled.then((res) => {
-    dispatch({ type: "SET_DATA", payload: res });
+    dispatch({ type: ACTION_TYPES.SET_DATA, payload: res });
   });
 };
 
@@ -79,10 +78,12 @@ export const getRecommendationsAPI = async ({ id, type, dispatch }) => {
         page: 1,
       })
     );
-    dispatch({ type: "SET_RECOMMENDATIONS", payload: res.data.results });
+    dispatch({
+      type: ACTION_TYPES.SET_RECOMMENDATIONS,
+      payload: res.data.results,
+    });
   } catch (err) {
-    dispatch({ type: "ERROR", payload: err });
-    console.log("ERROR ON RECOMMENDATIONS", err);
+    dispatch({ type: ACTION_TYPES.ERROR, payload: err });
   }
 };
 
@@ -106,17 +107,17 @@ export const getSearchDatasAPI = async ({
       throw new Error("No results found");
     }
     if (res.results.length === 0) {
-      dispatch({ type: "SET_PAGE", payload: -1 });
+      dispatch({ type: ACTION_TYPES.SET_PAGE, payload: -1 });
       return;
     }
 
     dispatch({
-      type: "SET_DATA",
+      type: ACTION_TYPES.SET_DATA,
       payload: { res: res.results, totalResults: res.total_results },
     });
   } catch (err) {
-    dispatch({ type: "ERROR" });
+    dispatch({ type: ACTION_TYPES.ERROR, payload: err });
   } finally {
-    dispatch({ type: "SETTLED" });
+    dispatch({ type: ACTION_TYPES.SETTLED });
   }
 };

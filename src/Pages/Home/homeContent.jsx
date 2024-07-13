@@ -8,6 +8,7 @@ import {
   GenreContainer,
   CardWrapper,
 } from "./style";
+import { Chip } from "@mui/material";
 import ToggleButton from "@mui/material/ToggleButton";
 import CircularProgress from "@mui/material/CircularProgress";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -16,7 +17,7 @@ import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
 //$ Reducers
 import {
   setHomeData,
-  getHomeDataAndBackDropsAPIByRedux,
+  getHomeDataAndBackDropsAPI,
 } from "../../redux/feature/home/homeSlice";
 
 //$ components
@@ -34,7 +35,7 @@ const HomeContentPage = ({ list, getUrl, queryPath, listenerType }) => {
   );
 
   //* The homeData won't be having the data for the specials immediately. So until it fetches the data we are keeping empty.
-  const { loading, data } = homeData[specials] || {
+  const { loading, data, error } = homeData[specials] || {
     loading: true,
     data: [],
     error: null,
@@ -49,7 +50,7 @@ const HomeContentPage = ({ list, getUrl, queryPath, listenerType }) => {
   useEffect(() => {
     if (specials !== "" && data.length === 0) {
       dispatch(
-        getHomeDataAndBackDropsAPIByRedux({
+        getHomeDataAndBackDropsAPI({
           queryPath,
           getUrl,
           specials,
@@ -97,8 +98,15 @@ const HomeContentPage = ({ list, getUrl, queryPath, listenerType }) => {
               <SpinnerWrapper style={{ height: "350px" }}>
                 <CircularProgress />
               </SpinnerWrapper>
+            ) : error || data.length === 0 ? (
+              <Chip
+                style={{
+                  fontSize: "20px",
+                  margin: "50px auto",
+                }}
+                label={`Can't fetch the data at the moment`}
+              />
             ) : (
-              data.length > 0 &&
               data.map((item) => {
                 return (
                   <div key={item.id}>

@@ -2,9 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { APIInstance } from "../../../api";
 
-export const getHomeDataAndBackDropsAPIByRedux = createAsyncThunk(
-  "home/getHomeDataAndBackDropsAPIByRedux",
-  async ({ queryPath, specials, getUrl }) => {
+export const getHomeDataAndBackDropsAPI = createAsyncThunk(
+  "home/getHomeDataAndBackDropsAPI",
+  async ({ queryPath, specials, getUrl }, { rejectWithValue }) => {
     const view = specials.split("-")[0];
     try {
       const endPoint = queryPath[0].endPoint ? view : undefined;
@@ -14,7 +14,8 @@ export const getHomeDataAndBackDropsAPIByRedux = createAsyncThunk(
       const res = await APIInstance.get(url);
       return { res: res.data.results, specials };
     } catch (err) {
-      return { err, specials };
+      const errMessage = err.response.data.status_message || "Unknown error";
+      return rejectWithValue({ errMessage, specials });
     }
   }
 );
@@ -39,27 +40,22 @@ export const homeSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getHomeDataAndBackDropsAPIByRedux.pending, (state) => {
+    builder.addCase(getHomeDataAndBackDropsAPI.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(
-      getHomeDataAndBackDropsAPIByRedux.fulfilled,
-      (state, action) => {
-        const { res, specials } = action.payload;
-        state.homeData[specials].data = res;
-        state.homeData[specials].loading = false;
-        state.backDropImages = state.backDropImages.concat(
-          res.map((item) => item.backdrop_path)
-        );
-      }
-    );
-    builder.addCase(
-      getHomeDataAndBackDropsAPIByRedux.rejected,
-      (state, action) => {
-        const { err, specials } = action.payload;
-        state.homeData[specials] = err.response.data.status_message;
-      }
-    );
+    builder.addCase(getHomeDataAndBackDropsAPI.fulfilled, (state, action) => {
+      const { res, specials } = action.payload;
+      state.homeData[specials].data = res;
+      state.homeData[specials].loading = false;
+      state.backDropImages = state.backDropImages.concat(
+        res.map((item) => item.backdrop_path)
+      );
+    });
+    builder.addCase(getHomeDataAndBackDropsAPI.rejected, (state, action) => {
+      const { errMessage, specials } = action.payload;
+      state.homeData[specials].error = errMessage;
+      state.homeData[specials].loading = false;
+    });
   },
 });
 
