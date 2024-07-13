@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const useContentInfo = () => {
+export const useContentInfoNavigation = () => {
   const navigate = useNavigate();
 
   const handleNavigation = useCallback((name, id, type) => {

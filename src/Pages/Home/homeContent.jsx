@@ -1,5 +1,5 @@
-import { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useCallback, useState } from "react";
 
 //$ styles
 import {
@@ -8,10 +8,10 @@ import {
   GenreContainer,
   CardWrapper,
 } from "./style";
-import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
-import CircularProgress from "@mui/material/CircularProgress";
 import ToggleButton from "@mui/material/ToggleButton";
+import CircularProgress from "@mui/material/CircularProgress";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import { SpinnerWrapper } from "../../Components/DisplayArea/SearchArea/style";
 
 //$ Reducers
 import {

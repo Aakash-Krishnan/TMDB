@@ -1,5 +1,5 @@
 //$ custom hooks
-import { useContentInfo } from "../../hooks/useContentInfo";
+import { useContentInfoNavigation } from "../../hooks/useContentInfoNavigation";
 
 //$ styles
 import {
@@ -18,7 +18,7 @@ import { IMAGES_BASE_URL } from "../../constants";
 
 const DisplayCard = ({ item, listenerType }) => {
   //* custom hook to handle navigation.
-  const { handleNavigation } = useContentInfo();
+  const { handleNavigation } = useContentInfoNavigation();
 
   return (
     <div>
