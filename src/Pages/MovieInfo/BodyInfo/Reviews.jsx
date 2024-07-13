@@ -23,7 +23,9 @@ const Reviews = ({ data }) => {
                           alt="profile-pik"
                         />
                       ) : (
-                        <div className="author-alt-img">{people.author[0]}</div>
+                        <div className="author-alt-img">
+                          {people.author[0].toUpperCase()}
+                        </div>
                       )}
                       <div className="author-details">
                         <div className="reviewer-title">
